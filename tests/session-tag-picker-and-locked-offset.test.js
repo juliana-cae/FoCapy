@@ -23,7 +23,7 @@ test('the focus session tag is an interactive control for changing the current s
 test('the locked-screen dashboard is positioned lower on the page', () => {
   assert.match(css, /html\[lang="en"\]\.session-active-lock \.timer-card\{transform:translateY\(18px\)\}/);
   assert.match(css, /\.session-category-picker\{[^}]*margin-left:auto/);
-  assert.match(css, /\.tag-category-option\{[^}]*padding:11\.5px 12px/);
-  assert.match(css, /\.tag-category-option\[aria-pressed="true"\]\{[^}]*background:color-mix\(in srgb,var\(--tag-active-color,var\(--moss\)\) 8%,transparent\)/);
-  assert.match(css, /\.tag-category-option\[aria-pressed="true"\]\{[^}]*box-shadow:0 0 0 2px color-mix\(in srgb,var\(--tag-active-color,var\(--moss\)\) 6%,transparent\)/);
+  assert.match(css, /\.tag-category-option\{[^}]*padding:13\.6px 12px/);
+  assert.match(css, /\.tag-category-option\[aria-pressed="true"\]\{[^}]*background:color-mix\(in srgb,var\(--tag-active-color,var\(--moss\)\) 4%,transparent\)/);
+  assert.match(css, /\.tag-category-option\[aria-pressed="true"\]\{[^}]*box-shadow:0 0 0 2px color-mix\(in srgb,var\(--tag-active-color,var\(--moss\)\) 3%,transparent\)/);
 });
