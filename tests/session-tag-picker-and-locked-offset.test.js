@@ -22,4 +22,6 @@ test('the focus session tag is an interactive control for changing the current s
 
 test('the locked-screen dashboard is positioned lower on the page', () => {
   assert.match(css, /html\[lang="en"\]\.session-active-lock \.timer-card\{transform:translateY\(18px\)\}/);
+  assert.match(css, /\.session-category-picker\{[^}]*margin-left:auto/);
+  assert.match(css, /\.tag-category-option\[aria-pressed="true"\]\{[^}]*box-shadow:0 0 0 2px color-mix\(in srgb,var\(--tag-active-color,var\(--moss\)\) 12%,transparent\)/);
 });
