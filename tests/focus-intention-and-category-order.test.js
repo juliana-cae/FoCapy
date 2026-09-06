@@ -10,7 +10,8 @@ test('focus header has category at the right and turns intention into static ses
   assert.match(html, /id="intention-label"/);
   assert.match(html, /id="session-category"/);
   assert.match(app, /function renderFocusContext\(/);
-  assert.match(css, /\.session-active-lock \.intention-row input\{display:none/);
+  assert.match(css, /\.session-active \.timer-card\{margin-top:34px\}/);
+  assert.match(css, /\.stopwatch-finish-button\{[^}]*box-shadow:0 0 0 2px/);
 });
 
 test('new category creation follows the selected category editor', () => {

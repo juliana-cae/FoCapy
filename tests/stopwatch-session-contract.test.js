@@ -28,6 +28,13 @@ test('Tipo offers Cronômetro and the UI starts it without a preset duration',()
   assert.match(html,/option value="cronometro">Cronômetro/);
   assert.match(app,/state\.sessionType==='cronometro'\?createStopwatchSession\(\{label:sessionLabel\(\)\}\)/);
   assert.match(app,/const stopwatch=Boolean\(c\.isStopwatch\)/);
-  assert.match(app,/Abandonar/);
+  assert.match(html,/id="start-button"[^>]*>Começar/);
+  assert.match(html,/id="reset-button"[^>]*>Abandonar/);
+  assert.match(html,/id="stopwatch-finish-button"[^>]*>Finalizar/);
+  assert.match(app,/stopwatch\?translateValue\('Pausar'\)/);
+  assert.match(app,/stopwatchFinish\.hidden=!stopwatch\|\|!running/);
+  assert.match(app,/stopwatchFinish\.onclick=completeSession/);
+  assert.match(app,/state\.current\.tag=tag/);
+  assert.match(app,/info\.hidden=!pomoRunning/);
   assert.doesNotMatch(app,/if\(state\.current\?\.isStopwatch&&state\.current\.elapsedSeconds>0\)\{completeSession\(\);return\}/);
 });
