@@ -102,14 +102,15 @@ export function awardVegetation(inventory = {}, focusMinutes, random = Math.rand
 }
 
 export const DEFAULT_TAG_COLOR = '#2d6c4d';
-function normalizeTagColor(color) { return /^#[0-9a-f]{6}$/i.test(String(color || '')) ? String(color).toLowerCase() : DEFAULT_TAG_COLOR; }
+export const DEFAULT_TAG_FONT_COLOR = '#15382e';
+function normalizeTagColor(color, fallback = DEFAULT_TAG_COLOR) { return /^#[0-9a-f]{6}$/i.test(String(color || '')) ? String(color).toLowerCase() : fallback; }
 export function hexToRgb(hex = DEFAULT_TAG_COLOR) { const normalized = normalizeTagColor(hex); return { r: parseInt(normalized.slice(1, 3), 16), g: parseInt(normalized.slice(3, 5), 16), b: parseInt(normalized.slice(5, 7), 16) }; }
 export function rgbToHex(r = 0, g = 0, b = 0) { return `#${[r, g, b].map(value => Math.max(0, Math.min(255, Math.round(Number(value) || 0))).toString(16).padStart(2, '0')).join('').toUpperCase()}`; }
 export function rgbToCmyk(r = 0, g = 0, b = 0) { const [red, green, blue] = [r, g, b].map(value => Math.max(0, Math.min(255, Number(value) || 0)) / 255); const k = 1 - Math.max(red, green, blue); if (k === 1) return { c: 0, m: 0, y: 0, k: 100 }; return { c: Math.round((1 - red - k) / (1 - k) * 100), m: Math.round((1 - green - k) / (1 - k) * 100), y: Math.round((1 - blue - k) / (1 - k) * 100), k: Math.round(k * 100) }; }
-export function normalizeTasks(tasks = []) { const seen = new Set(); return (Array.isArray(tasks) ? tasks : []).reduce((result, task, index) => { const title = String(task?.title ?? task ?? '').trim().replace(/\s+/g, ' ').slice(0, 100); const key = title.toLocaleLowerCase(); if (!title || seen.has(key)) return result; seen.add(key); const normalized={ id: String(task?.id || `task-${index + 1}`), title, done: Boolean(task?.done), ...(task?.completedAt?{completedAt:String(task.completedAt)}:{}) }; if(String(task?.tag||'').trim()){normalized.tag=String(task.tag).trim().slice(0,32);normalized.tagColor=normalizeTagColor(task?.tagColor)} result.push(normalized); return result; }, []); }
-export function addTask(tasks = [], title = '', tag = '', tagColor = DEFAULT_TAG_COLOR) { const normalized = normalizeTasks(tasks); return normalizeTasks([...normalized, { id: `task-${Date.now()}-${normalized.length + 1}`, title, tag, tagColor, done: false }]); }
+export function normalizeTasks(tasks = []) { const seen = new Set(); return (Array.isArray(tasks) ? tasks : []).reduce((result, task, index) => { const title = String(task?.title ?? task ?? '').trim().replace(/\s+/g, ' ').slice(0, 100); const key = title.toLocaleLowerCase(); if (!title || seen.has(key)) return result; seen.add(key); const normalized={ id: String(task?.id || `task-${index + 1}`), title, done: Boolean(task?.done), ...(task?.completedAt?{completedAt:String(task.completedAt)}:{}) }; if(String(task?.tag||'').trim()){normalized.tag=String(task.tag).trim().slice(0,32);normalized.tagColor=normalizeTagColor(task?.tagColor);normalized.tagFontColor=normalizeTagColor(task?.tagFontColor,DEFAULT_TAG_FONT_COLOR)} result.push(normalized); return result; }, []); }
+export function addTask(tasks = [], title = '', tag = '', tagColor = DEFAULT_TAG_COLOR, tagFontColor = DEFAULT_TAG_FONT_COLOR) { const normalized = normalizeTasks(tasks); return normalizeTasks([...normalized, { id: `task-${Date.now()}-${normalized.length + 1}`, title, tag, tagColor, tagFontColor, done: false }]); }
 export function taskIdsForSession(tasks = [], ids = []) { const known = new Set(normalizeTasks(tasks).map(task => task.id)); return [...new Set((Array.isArray(ids) ? ids : []).map(String))].filter(id => known.has(id)); }
-export function taskSnapshotsForSession(tasks=[],ids=[]){const selected=new Set(taskIdsForSession(tasks,ids));return normalizeTasks(tasks).filter(task=>selected.has(task.id)).map(({id,title,tag,tagColor})=>({id,title,tag,tagColor}));}
+export function taskSnapshotsForSession(tasks=[],ids=[]){const selected=new Set(taskIdsForSession(tasks,ids));return normalizeTasks(tasks).filter(task=>selected.has(task.id)).map(({id,title,tag,tagColor,tagFontColor})=>({id,title,tag,tagColor,tagFontColor}));}
 export function taskHistoryForFilter(sessions=[],taskId='',tag=''){const key=String(taskId||''),category=String(tag||'');return (Array.isArray(sessions)?sessions:[]).filter(session=>session?.status==='completed'&&Array.isArray(session.taskSnapshots)&&(!key||session.taskSnapshots.some(task=>task.id===key))&&(!category||session.tag===category||session.taskSnapshots.some(task=>task.tag===category)));}
 export function completeTasksForSession(tasks = [], ids = []) { const selected=new Set(taskIdsForSession(tasks,ids)); return normalizeTasks(tasks).map(task=>selected.has(task.id)?{...task,done:true,completedAt:new Date().toISOString()}:task); }
 export function normalizeSessionTags(tags = []) {
@@ -117,15 +118,16 @@ export function normalizeSessionTags(tags = []) {
   return (Array.isArray(tags) ? tags : []).reduce((result, tag) => {
     const name = String(typeof tag === 'object' && tag ? tag.name : tag || '').trim().slice(0, 32);
     const key = name.toLocaleLowerCase();
-    if (name && !seen.has(key)) { seen.add(key); result.push({ name, color: normalizeTagColor(tag?.color) }); }
+    if (name && !seen.has(key)) { seen.add(key); result.push({ name, color: normalizeTagColor(tag?.color), fontColor: normalizeTagColor(tag?.fontColor, DEFAULT_TAG_FONT_COLOR) }); }
     return result;
   }, []);
 }
-export function addSessionTag(tags = [], name = '', color = DEFAULT_TAG_COLOR) { return normalizeSessionTags([...normalizeSessionTags(tags), { name, color }]); }
+export function addSessionTag(tags = [], name = '', color = DEFAULT_TAG_COLOR, fontColor = DEFAULT_TAG_FONT_COLOR) { return normalizeSessionTags([...normalizeSessionTags(tags), { name, color, fontColor }]); }
 export function updateSessionTagColor(tags = [], name = '', color = DEFAULT_TAG_COLOR) {
   const key = String(name || '').trim().toLocaleLowerCase();
   return normalizeSessionTags(tags).map(tag => tag.name.toLocaleLowerCase() === key ? { ...tag, color: normalizeTagColor(color) } : tag);
 }
+export function updateSessionTagFontColor(tags = [], name = '', fontColor = DEFAULT_TAG_FONT_COLOR) { const key = String(name || '').trim().toLocaleLowerCase(); return normalizeSessionTags(tags).map(tag => tag.name.toLocaleLowerCase() === key ? { ...tag, fontColor: normalizeTagColor(fontColor, DEFAULT_TAG_FONT_COLOR) } : tag); }
 export function renameSessionTag(tags = [], name = '', nextName = '') {
   const normalized = normalizeSessionTags(tags); const key = String(name || '').trim().toLocaleLowerCase();
   const replacement = String(nextName || '').trim().slice(0, 32); const replacementKey = replacement.toLocaleLowerCase();
@@ -148,8 +150,8 @@ function seriesDefinition(period, now) {
 }
 export function statisticsForPeriod(sessions = [], period = 'daily', now = new Date()) {
   const definition=seriesDefinition(period,now),series=definition.map(entry=>({key:entry.key,label:entry.label,minutes:0})),tagMap=new Map();let totalMinutes=0,totalSessions=0;
-  (Array.isArray(sessions)?sessions:[]).filter(session=>session?.status==='completed'&&session.completedAt).forEach(session=>{const date=new Date(session.completedAt);if(Number.isNaN(date.getTime()))return;const index=definition.findIndex(entry=>entry.match(date));if(index<0)return;const minutes=Math.max(0,Number(session.focusMinutes)||0),tag=String(session.tag||'Sem tag').trim()||'Sem tag',color=normalizeTagColor(session.tagColor);series[index].minutes+=minutes;totalMinutes+=minutes;totalSessions+=1;const current=tagMap.get(tag)||{tag,color,minutes:0,sessions:0,points:Array(definition.length).fill(0)};current.minutes+=minutes;current.sessions+=1;current.points[index]+=minutes;tagMap.set(tag,current)});
+  (Array.isArray(sessions)?sessions:[]).filter(session=>session?.status==='completed'&&session.completedAt).forEach(session=>{const date=new Date(session.completedAt);if(Number.isNaN(date.getTime()))return;const index=definition.findIndex(entry=>entry.match(date));if(index<0)return;const minutes=Math.max(0,Number(session.focusMinutes)||0),tag=String(session.tag||'Sem tag').trim()||'Sem tag',color=normalizeTagColor(session.tagColor),fontColor=normalizeTagColor(session.tagFontColor,DEFAULT_TAG_FONT_COLOR);series[index].minutes+=minutes;totalMinutes+=minutes;totalSessions+=1;const current=tagMap.get(tag)||{tag,color,fontColor,minutes:0,sessions:0,points:Array(definition.length).fill(0)};current.minutes+=minutes;current.sessions+=1;current.points[index]+=minutes;tagMap.set(tag,current)});
   const tags=[...tagMap.values()].sort((a,b)=>b.minutes-a.minutes||a.tag.localeCompare(b.tag,'pt-BR'));
-  const categories=tags.map(({tag,color,points})=>({tag,color,points}));
+  const categories=tags.map(({tag,color,fontColor,points})=>({tag,color,fontColor,points}));
   return {period,series,totalMinutes,totalSessions,tags:tags.map(({tag,minutes,sessions})=>({tag,minutes,sessions})),categorySeries:categories};
 }

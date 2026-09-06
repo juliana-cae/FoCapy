@@ -4,9 +4,9 @@ import { addSessionTag, normalizeSessionTags, statisticsForPeriod } from '../src
 
 test('tags are trimmed, unique regardless of case, and reusable', () => {
   const tags = normalizeSessionTags([' Trabalho ', 'Estudo', 'trabalho', '', null]);
-  assert.deepEqual(tags, [{ name: 'Trabalho', color: '#2d6c4d' }, { name: 'Estudo', color: '#2d6c4d' }]);
-  assert.deepEqual(addSessionTag(tags, 'Saúde'), [{ name: 'Trabalho', color: '#2d6c4d' }, { name: 'Estudo', color: '#2d6c4d' }, { name: 'Saúde', color: '#2d6c4d' }]);
-  assert.deepEqual(addSessionTag(tags, ' estudo '), [{ name: 'Trabalho', color: '#2d6c4d' }, { name: 'Estudo', color: '#2d6c4d' }]);
+  assert.deepEqual(tags, [{ name: 'Trabalho', color: '#2d6c4d', fontColor: '#15382e' }, { name: 'Estudo', color: '#2d6c4d', fontColor: '#15382e' }]);
+  assert.deepEqual(addSessionTag(tags, 'Saúde'), [{ name: 'Trabalho', color: '#2d6c4d', fontColor: '#15382e' }, { name: 'Estudo', color: '#2d6c4d', fontColor: '#15382e' }, { name: 'Saúde', color: '#2d6c4d', fontColor: '#15382e' }]);
+  assert.deepEqual(addSessionTag(tags, ' estudo '), [{ name: 'Trabalho', color: '#2d6c4d', fontColor: '#15382e' }, { name: 'Estudo', color: '#2d6c4d', fontColor: '#15382e' }]);
 });
 
 test('statistics aggregate completed focus time by day and tag', () => {

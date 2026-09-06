@@ -9,10 +9,10 @@ const app = readFileSync(new URL('../src/app.js', import.meta.url), 'utf8');
 test('legacy tag strings migrate to editable colored tags without duplicates', () => {
   const tags = normalizeSessionTags(['Trabalho', { name: 'Estudo', color: '#7b61ff' }, ' trabalho ']);
   assert.deepEqual(tags, [
-    { name: 'Trabalho', color: '#2d6c4d' },
-    { name: 'Estudo', color: '#7b61ff' },
+    { name: 'Trabalho', color: '#2d6c4d', fontColor: '#15382e' },
+    { name: 'Estudo', color: '#7b61ff', fontColor: '#15382e' },
   ]);
-  assert.deepEqual(addSessionTag(tags, 'Leitura', '#d66e58').at(-1), { name: 'Leitura', color: '#d66e58' });
+  assert.deepEqual(addSessionTag(tags, 'Leitura', '#d66e58').at(-1), { name: 'Leitura', color: '#d66e58', fontColor: '#15382e' });
 });
 
 test('tags configuration is placed immediately above Blindado, is initially collapsed, and offers a hexadecimal color editor', () => {
