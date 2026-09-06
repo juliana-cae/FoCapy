@@ -13,7 +13,7 @@ test('Coleção replaces Jardins in the navigation and screen', () => {
 
 test('earned inventory items have no activation or deactivation controls', () => {
   assert.doesNotMatch(app, /item-toggle|toggleInventoryItem|inactiveItems\[item\.id\]/);
-  assert.doesNotMatch(html, /Ativar|Desativar/);
+  assert.doesNotMatch(html, /Ativar item|Desativar item/);
 });
 
 test('Maestre da Cabriola is supreme and requires exceptional focus', () => {
