@@ -4,8 +4,8 @@ import { readFileSync } from 'node:fs';
 const app=readFileSync(new URL('../src/app.js',import.meta.url),'utf8');
 const css=readFileSync(new URL('../src/app.css',import.meta.url),'utf8');
 
-test('leaving a normal running focus pauses it, while Strict Focus persists natively',()=>{
- assert.match(app,/function pauseForExit\(\)\{if\(state\.strict\)return;if\(state\.current\?\.status!=='running'/);
+test('leaving any running focus pauses it and shows the sad capybara on return',()=>{
+ assert.match(app,/function pauseForExit\(\)\{if\(state\.current\?\.status!=='running'/);
  assert.match(app,/document\.addEventListener\('visibilitychange',\(\)=>\{if\(document\.hidden\)\{pauseForExit\(\)/);
  assert.match(app,/else if\(state\.shieldPaused\)\{showShieldPausedNotice\(\)/);
 });

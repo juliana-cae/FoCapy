@@ -4,6 +4,4 @@
     <string name="title_activity_main">FoCapy</string>
     <string name="package_name">com.focapy.app</string>
     <string name="custom_url_scheme">com.focapy.app</string>
-    <string name="strict_focus_service_label">Proteção de Foco FoCapy</string>
-    <string name="strict_focus_service_description">Impede interação com aplicativos não permitidos durante sessões Strict Focus.</string>
 </resources>
