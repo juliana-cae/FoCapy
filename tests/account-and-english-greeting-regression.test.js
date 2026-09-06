@@ -11,5 +11,5 @@ test('English greeting and account erasure are explicit app behaviors',()=>{
  assert.match(app,/localStorage\.removeItem\(STORE_KEY\)/);
 });
 test('English shielded dashboard receives a subtle lower offset',()=>{
- assert.match(css,/html\[lang="en"\]\.session-active-lock[\s\S]{0,160}translateY\(8px\)/);
+ assert.match(css,/html\[lang="en"\]\.session-active-lock[\s\S]{0,160}translateY\(18px\)/);
 });
