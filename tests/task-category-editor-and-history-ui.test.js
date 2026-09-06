@@ -45,7 +45,8 @@ test('history category filter limits task choices and deleting a row removes onl
  assert.equal(JSON.parse(window.localStorage.getItem('focapy-state-v2')).sessions[1].taskSnapshots[0].title,'Ler');
 });
 
-test('task category card is thirty percent larger than its original compact size',()=>{
+test('task category card uses full-size mobile controls',()=>{
  const css=readFileSync(new URL('../src/app.css',import.meta.url),'utf8');
- assert.match(css,/\.task-category-card\{[^}]*transform:scale\(\.91\)/);
+ assert.doesNotMatch(css,/\.task-category-card\{[^}]*transform:scale/);
+ assert.match(css,/\.task-category-card \.tag-settings-toggle\{[^}]*padding:18px/);
 });
