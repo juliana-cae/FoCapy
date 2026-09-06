@@ -61,6 +61,14 @@ export function toggleInventoryItem(inactiveItems = {}, itemId) {
   else next[itemId] = true;
   return next;
 }
+export function advancePomoSession(session) {
+  const current = { ...session, phaseElapsedSeconds: (Number(session.phaseElapsedSeconds) || 0) + 1 };
+  if (current.phaseElapsedSeconds < current.phaseTotalSeconds) return { session: current, completed: false };
+  const startFocus = (cycle) => ({ ...current, pomoPhase: 'focus', pomoCycle: cycle, phaseElapsedSeconds: 0, phaseTotalSeconds: current.pomoFocusMinutes * 60 });
+  if (current.pomoPhase === 'focus' && current.pomoBreakMinutes > 0) return { session: { ...current, pomoPhase: 'break', phaseElapsedSeconds: 0, phaseTotalSeconds: current.pomoBreakMinutes * 60 }, completed: false };
+  if (current.pomoCycle < current.pomoCycles) return { session: startFocus(current.pomoCycle + 1), completed: false };
+  return { session: current, completed: true };
+}
 export function awardVegetation(inventory = {}, focusMinutes, seed = 0) {
   const minutes = Math.max(1, Number(focusMinutes) || 1);
   const eligible = VEGETATION.filter((item) => item.minMinutes <= minutes);
