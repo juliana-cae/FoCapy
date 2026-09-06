@@ -19,5 +19,5 @@ test('a Blindada active session hides focus content below the timer dashboard an
   assert.match(html, /id="focus-dashboard"/);
   assert.match(html, /id="focus-below-dashboard"/);
   assert.match(css, /\.session-active-lock #focus-below-dashboard\{display:none\}/);
-  assert.match(app, /const locked=state\.current\?\.status==='running'&&state\.strict/);
+  assert.match(app, /const active=state\.current\?\.status==='running',locked=active&&state\.strict/);
 });

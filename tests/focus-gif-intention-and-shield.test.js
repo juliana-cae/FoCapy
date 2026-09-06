@@ -16,7 +16,7 @@ test('intention starts compact and turns editable only when its label is tapped'
   assert.match(css,/\.intention-row input\{[^}]*width:190px/);
 });
 test('pausing, ending, restarting or disabling Blindado immediately releases focus lock',()=>{
-  assert.match(app,/const locked=state\.current\?\.status==='running'&&state\.strict/);
+  assert.match(app,/const active=state\.current\?\.status==='running',locked=active&&state\.strict/);
   assert.match(app,/const running=state\.current\?\.status==='running'&&state\.strict/);
   assert.match(app,/\$\('strict-toggle'\)\.onchange=e=>\{state\.strict=e\.target\.checked;if\(state\.strict\)showShieldLockNotice\(\);syncFocusProtection\(\);renderTimer\(\);saveState\(\)\}/);
 });

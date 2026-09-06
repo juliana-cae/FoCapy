@@ -8,7 +8,7 @@ const css=readFileSync(new URL('../src/app.css',import.meta.url),'utf8');
 
 test('only a running Blindada session locks the focus dashboard; pause restores app navigation',()=>{
   assert.match(app,/const active=state\.current\?\.status==='running',locked=active&&state\.strict;document\.documentElement\.classList\.toggle\('session-active',active\);document\.documentElement\.classList\.toggle\('session-active-lock',locked\)/);
-  assert.match(app,/window\.scrollTo\(0,112\)/);
+  assert.match(app,/window\.scrollTo\(0,168\)/);
   assert.match(app,/if\(state\.current\?\.status==='running'&&state\.strict&&name!=='focus'\)return/);
   assert.match(css,/\.session-active-lock,.session-active-lock body\{overflow:hidden/);
   assert.match(html,/id="focus" class="screen active"/);
