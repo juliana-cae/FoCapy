@@ -10,7 +10,7 @@ test('task history filters and deletes standalone completed tasks as well as foc
   assert.match(app,/completedList.*selectedFilter/);
   assert.match(app,/task-history-delete/);
   assert.match(app,/completed-task-delete/);
-  assert.match(app,/task\.done=false/);
-  assert.match(app,/task\.completedAt=undefined/);
+  assert.match(app,/deleteTaskFromHistory/);
+  assert.match(app,/state\.tasks=state\.tasks\.filter\(item=>item\.id!==task\.id\)/);
   assert.match(app,/taskSnapshots.*filter/);
 });
