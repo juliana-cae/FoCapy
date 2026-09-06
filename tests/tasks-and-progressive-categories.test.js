@@ -6,10 +6,10 @@ import { readFileSync } from 'node:fs';
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 const app = readFileSync(new URL('../src/app.js', import.meta.url), 'utf8');
 
-test('tasks are persistent, unique and session associations contain only existing task IDs', () => {
+test('tasks persist duplicate titles and session associations contain only existing task IDs', () => {
   const tasks = addTask([{ id: 'a', title: 'Revisar texto', done: false }], 'Estudar');
   assert.equal(tasks.length, 2);
-  assert.equal(addTask(tasks, ' estudar ').length, 2);
+  assert.equal(addTask(tasks, ' estudar ').length, 3);
   assert.deepEqual(taskIdsForSession(tasks, ['a', 'missing']), ['a']);
   assert.deepEqual(normalizeTasks([{ title: '  Planejar  ' }])[0], { id: 'task-1', title: 'Planejar', done: false });
 });
