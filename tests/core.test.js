@@ -4,8 +4,10 @@ import {
   createSession, progressFor, finishSession, dailyProgress, formatSeconds,
   phraseForElapsed, addPhrase, updatePhrase, VEGETATION, createInventory, awardVegetation,
   monthKey, rolloverMonthlyState, toggleInventoryItem, migrateLegacyInventory, advancePomoSession,
-  COMPLETION_IMAGE_FILES, pickCompletionImage,
+  COMPLETION_IMAGE_FILES, pickCompletionImage, mergeDefaultPhrases,
 } from '../src/core.js';
+
+test('new inspirational defaults are added without overwriting saved phrases', () => { const merged=mergeDefaultPhrases(['Minha frase'],['Minha frase','Respire, e sinta que chegou.','Tudo passa.']); assert.deepEqual(merged,['Minha frase','Respire, e sinta que chegou.','Tudo passa.']); });
 
 test('completion picker includes every saved celebration image and supports random selection', () => { assert.equal(COMPLETION_IMAGE_FILES.length,16); assert.equal(new Set(COMPLETION_IMAGE_FILES).size,16); assert.equal(pickCompletionImage(()=>0),COMPLETION_IMAGE_FILES[0]); assert.equal(pickCompletionImage(()=>.999999),COMPLETION_IMAGE_FILES.at(-1)); });
 

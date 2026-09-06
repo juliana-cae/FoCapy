@@ -1,3 +1,5 @@
+export function mergeDefaultPhrases(saved=[],defaults=[]){return [...new Set([...(Array.isArray(saved)?saved:[]),...defaults])];}
+
 export const COMPLETION_IMAGE_FILES=['completion-capybara.jpg','completion-chubby-smile.jpg','completion-gentle-portrait.jpg','completion-wink.jpg','completion-proud.jpg','completion-toothy-smile.jpg','completion-cuddles.jpg','completion-pair.jpg','completion-cake.jpg','completion-pink.jpg','completion-greenhouse.jpg','completion-leaf.jpg','completion-thumbs-up.jpg','completion-dont-worry.jpg','completion-beach.jpg','completion-grass.jpg'];
 export function pickCompletionImage(random=Math.random){return COMPLETION_IMAGE_FILES[Math.min(COMPLETION_IMAGE_FILES.length-1,Math.floor(random()*COMPLETION_IMAGE_FILES.length))]}
 
