@@ -12,7 +12,10 @@ test('the focus session tag is an interactive control for changing the current s
   assert.match(app, /session-category-picker/);
   assert.match(app, /state\.current\.tag=tag/);
   assert.match(app, /state\.current\.tagColor=definition\?\.color/);
-  assert.match(app, /state\.current\.tagFontColor=definition\?\.fontColor/);
+  assert.match(app, /state\.current\.tagFontColor=definition\?\.fontColor\|\|''/);
+  assert.match(app, /const tag=session\?\.tag!==undefined\?session\.tag:state\.selectedTag\|\|''/);
+  assert.match(app, /category\.hidden=false/);
+  assert.match(app, /new Option\(state\.language==='en'\?'No category':'Sem categoria',''\)/);
 });
 
 test('the locked-screen dashboard is positioned lower on the page', () => {
