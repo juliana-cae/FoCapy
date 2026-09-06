@@ -14,7 +14,9 @@ test('the focus session tag is an interactive control for changing the current s
   assert.match(app, /state\.current\.tagColor=definition\?\.color/);
   assert.match(app, /state\.current\.tagFontColor=definition\?\.fontColor\|\|''/);
   assert.match(app, /const tag=session\?\.tag!==undefined\?session\.tag:state\.selectedTag\|\|''/);
-  assert.match(app, /category\.hidden=false/);
+  assert.match(app, /button\.replaceWith\(select\)/);
+  assert.match(app, /select\.focus\(\);select\.showPicker\?\.\(\)/);
+  assert.match(app, /select\.onblur=restore/);
   assert.match(app, /new Option\(state\.language==='en'\?'No category':'Sem categoria',''\)/);
 });
 

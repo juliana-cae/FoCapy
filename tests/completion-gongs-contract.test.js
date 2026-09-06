@@ -15,9 +15,10 @@ test('the three requested gong files exist',()=>{
   for(const name of ['completion-gongo-1.mp3','completion-gongo-2.mp3','completion-gongo-3.mp3']) assert.ok(existsSync(new URL(`../assets/${name}`,import.meta.url)));
 });
 
-test('duration selection changes built-in gongs but preserves uploaded custom audio',()=>{
-  assert.match(app,/function selectBuiltInCompletionTone\(minutes\)\{if\(!isCustomCompletionTone\(\)\)state\.completionTone=completionToneForMinutes\(minutes\)\}/);
+test('duration selection changes built-in gongs but preserves uploaded custom audio and manual choices',()=>{
+  assert.match(app,/function selectBuiltInCompletionTone\(minutes\)\{if\(!state\.completionToneManual&&!isCustomCompletionTone\(\)\)state\.completionTone=completionToneForMinutes\(minutes\)\}/);
   assert.match(app,/selectBuiltInCompletionTone\(state\.minutes\);saveState\(\)/);
+  assert.match(app,/state\.completionToneManual=true/);
   assert.match(app,/gongo-1':'\.\.\/assets\/completion-gongo-1\.mp3/);
   assert.match(app,/gongo-2':'\.\.\/assets\/completion-gongo-2\.mp3/);
   assert.match(app,/gongo-3':'\.\.\/assets\/completion-gongo-3\.mp3/);
