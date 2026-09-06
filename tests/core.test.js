@@ -10,7 +10,7 @@ import {
 
 test('new inspirational defaults are added without overwriting saved phrases', () => { const merged=mergeDefaultPhrases(['Minha frase'],['Minha frase','Respire, e sinta que chegou.','Tudo passa.']); assert.deepEqual(merged,['Minha frase','Respire, e sinta que chegou.','Tudo passa.']); });
 
-test('completion picker includes every saved celebration image and supports random selection', () => { assert.equal(COMPLETION_IMAGE_FILES.length,33); assert.equal(new Set(COMPLETION_IMAGE_FILES).size,33); assert.equal(pickCompletionImage(()=>0),COMPLETION_IMAGE_FILES[0]); assert.equal(pickCompletionImage(()=>.999999),COMPLETION_IMAGE_FILES.at(-1)); });
+test('completion picker includes every saved celebration image and supports random selection', () => { assert.equal(COMPLETION_IMAGE_FILES.length,51); assert.equal(new Set(COMPLETION_IMAGE_FILES).size,51); assert.equal(pickCompletionImage(()=>0),COMPLETION_IMAGE_FILES[0]); assert.equal(pickCompletionImage(()=>.999999),COMPLETION_IMAGE_FILES.at(-1)); });
 
 test('a new focus session starts with requested duration', () => { const session=createSession({minutes:25,label:'Ler'}); assert.equal(session.totalSeconds,1500); assert.equal(session.elapsedSeconds,0); assert.equal(session.label,'Ler'); assert.equal(session.status,'ready'); });
 test('session progress is clamped between zero and one', () => { assert.equal(progressFor({elapsedSeconds:0,totalSeconds:60}),0); assert.equal(progressFor({elapsedSeconds:30,totalSeconds:60}),.5); assert.equal(progressFor({elapsedSeconds:99,totalSeconds:60}),1); });
