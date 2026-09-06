@@ -1,24 +1,24 @@
 export const VEGETATION = [
-  { id: 'clover', name: 'Trevo-luz', icon: '☘', rarity: 'comum', minMinutes: 1 },
-  { id: 'grass', name: 'Graminha', icon: '〰', rarity: 'comum', minMinutes: 1 },
-  { id: 'daisy', name: 'Margarida', icon: '✿', rarity: 'comum', minMinutes: 5 },
-  { id: 'fern', name: 'Samambaia', icon: '♨', rarity: 'comum', minMinutes: 10 },
-  { id: 'moss', name: 'Musgo macio', icon: '❧', rarity: 'comum', minMinutes: 15 },
-  { id: 'lavender', name: 'Lavanda', icon: '✾', rarity: 'incomum', minMinutes: 20 },
-  { id: 'sunflower', name: 'Girassol', icon: '✺', rarity: 'incomum', minMinutes: 25 },
-  { id: 'bamboo', name: 'Bambu', icon: '♮', rarity: 'incomum', minMinutes: 25 },
-  { id: 'cattail', name: 'Taboa', icon: '♒', rarity: 'incomum', minMinutes: 30 },
-  { id: 'lily', name: 'Lírio d’água', icon: '✤', rarity: 'incomum', minMinutes: 35 },
-  { id: 'pine', name: 'Pinheirinho', icon: '♠', rarity: 'rara', minMinutes: 40 },
-  { id: 'maple', name: 'Bordo dourado', icon: '♣', rarity: 'rara', minMinutes: 45 },
-  { id: 'willow', name: 'Salgueiro', icon: '♧', rarity: 'rara', minMinutes: 50 },
-  { id: 'cherry', name: 'Cerejeira', icon: '❀', rarity: 'rara', minMinutes: 60 },
-  { id: 'moonflower', name: 'Flor-lua', icon: '☾', rarity: 'rara', minMinutes: 75 },
-  { id: 'redwood', name: 'Sequoia', icon: '♜', rarity: 'lendária', minMinutes: 90 },
-  { id: 'rainbow', name: 'Arco-íris botânico', icon: '✧', rarity: 'lendária', minMinutes: 100 },
-  { id: 'crystal', name: 'Cristal verde', icon: '◈', rarity: 'lendária', minMinutes: 120 },
-  { id: 'stardust', name: 'Erva estelar', icon: '✦', rarity: 'lendária', minMinutes: 150 },
-  { id: 'ancient', name: 'Árvore ancestral', icon: '♛', rarity: 'lendária', minMinutes: 180 },
+  { id: 'tangerina', name: 'Tangerina', icon: '🍊', rarity: 'comum', minMinutes: 1 },
+  { id: 'meleca-nariz', name: 'Meleca de nariz', icon: '🤧', rarity: 'comum', minMinutes: 1 },
+  { id: 'folha-mastigada', name: 'Folha mastigada', icon: '🍃', rarity: 'comum', minMinutes: 5 },
+  { id: 'milho-cozido', name: 'Milho cozido', icon: '🌽', rarity: 'comum', minMinutes: 10 },
+  { id: 'banho-lama', name: 'Banho de lama', icon: '🟤', rarity: 'comum', minMinutes: 15 },
+  { id: 'boia-patinho', name: 'Boia de patinho', icon: '🦆', rarity: 'incomum', minMinutes: 20 },
+  { id: 'toalha-quentinha', name: 'Toalha quentinha', icon: '🧺', rarity: 'incomum', minMinutes: 25 },
+  { id: 'chapeu-sol', name: 'Chapéu de sol', icon: '👒', rarity: 'incomum', minMinutes: 25 },
+  { id: 'raminho-hortela', name: 'Raminho de hortelã', icon: '🌿', rarity: 'incomum', minMinutes: 30 },
+  { id: 'biscoito-capivara', name: 'Biscoito de capivara', icon: '🍪', rarity: 'incomum', minMinutes: 35 },
+  { id: 'agua-termal', name: 'Água termal', icon: '♨️', rarity: 'rara', minMinutes: 40 },
+  { id: 'passarinho-testa', name: 'Passarinho na testa', icon: '🐦', rarity: 'rara', minMinutes: 45 },
+  { id: 'melancia-gelada', name: 'Melancia gelada', icon: '🍉', rarity: 'rara', minMinutes: 50 },
+  { id: 'rede-descanso', name: 'Rede de descanso', icon: '🪢', rarity: 'rara', minMinutes: 60 },
+  { id: 'poca-lama', name: 'Poça de lama brilhante', icon: '💧', rarity: 'rara', minMinutes: 75 },
+  { id: 'banho-chuva', name: 'Banho de chuva', icon: '🌧️', rarity: 'lendária', minMinutes: 90 },
+  { id: 'piscina-lama', name: 'Piscina de lama', icon: '🏝️', rarity: 'lendária', minMinutes: 100 },
+  { id: 'coroa-folhas', name: 'Coroa de folhas', icon: '👑', rarity: 'lendária', minMinutes: 120 },
+  { id: 'banquete-frutas', name: 'Banquete de frutas', icon: '🍓', rarity: 'lendária', minMinutes: 150 },
+  { id: 'trono-pedra', name: 'Trono de pedra', icon: '🪨', rarity: 'lendária', minMinutes: 180 },
 ];
 
 export function createSession({ minutes, label = 'Foco' }) {
@@ -51,6 +51,10 @@ export function rolloverMonthlyState(state, currentMonth) {
 }
 
 export function createInventory() { return {}; }
+export function migrateLegacyInventory(inventory = {}) {
+  const legacyIds = { clover:'tangerina', grass:'meleca-nariz', daisy:'folha-mastigada', fern:'milho-cozido', moss:'banho-lama', lavender:'boia-patinho', sunflower:'toalha-quentinha', bamboo:'chapeu-sol', cattail:'raminho-hortela', lily:'biscoito-capivara', pine:'agua-termal', maple:'passarinho-testa', willow:'melancia-gelada', cherry:'rede-descanso', moonflower:'poca-lama', redwood:'banho-chuva', rainbow:'piscina-lama', crystal:'coroa-folhas', stardust:'banquete-frutas', ancient:'trono-pedra' };
+  return Object.entries(inventory).reduce((next,[id,count])=>{const quantity=Number(count)||0;if(quantity>0){const target=legacyIds[id]||id;next[target]=(next[target]||0)+quantity}return next},{});
+}
 export function toggleInventoryItem(inactiveItems = {}, itemId) {
   const next = { ...inactiveItems };
   if (next[itemId]) delete next[itemId];
