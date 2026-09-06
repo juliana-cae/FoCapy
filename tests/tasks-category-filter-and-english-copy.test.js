@@ -8,7 +8,7 @@ const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
 async function boot(language){
   const dom=new JSDOM(html,{url:'http://localhost/'}),{window}=dom;
   for(const dialog of window.document.querySelectorAll('dialog')){dialog.showModal=function(){this.open=true};dialog.close=function(){this.open=false}}
-  window.localStorage.setItem('focapy-state-v2',JSON.stringify({language,languageChosen:true,tags:[{name:'Home',color:'#d92727'},{name:'Study',color:'#269bd2'}],tasks:[{id:'home',title:'Clean desk',tag:'Home',tagColor:'#d92727'},{id:'study',title:'Read book',tag:'Study',tagColor:'#269bd2'}],sessions:[{status:'completed',label:'Cronômetro — Foco profundo',focusMinutes:25,completedAt:'2026-09-06T12:00:00.000Z'}]}));
+  window.localStorage.setItem('focapy-state-v2',JSON.stringify({language,languageChosen:true,tags:[{name:'Home',color:'#d92727'},{name:'Study',color:'#269bd2'}],tasks:[{id:'home',title:'Clean desk',tag:'Home',tagColor:'#d92727'},{id:'study',title:'Read book',tag:'Study',tagColor:'#269bd2'}],sessionTaskIds:['home'],sessions:[{status:'completed',label:'Cronômetro — Foco profundo',focusMinutes:25,completedAt:'2026-09-06T12:00:00.000Z'}]}));
   Object.assign(globalThis,{window,document:window.document,localStorage:window.localStorage,HTMLElement:window.HTMLElement,Event:window.Event,Node:window.Node,Option:window.Option,Audio:class{addEventListener(){} play(){return Promise.resolve()} pause(){}},indexedDB:{open(){throw new Error('not needed')}},setInterval:()=>0,clearInterval:()=>{}});
   await import(`../src/app.js?tasks-filter=${language}-${Date.now()}-${Math.random()}`);
   return window;
@@ -32,5 +32,6 @@ test('category-filtered active tasks show configured colors and completed tasks 
     [...doc.querySelectorAll('#task-session-list button')].find(button=>button.textContent=== (language==='en'?'Complete':'Concluir')).click();
     assert.doesNotMatch(doc.getElementById('task-session-list').textContent,/Clean desk/);
     assert.match(doc.getElementById('completed-task-list').textContent,/Clean desk/);
+    assert.deepEqual(JSON.parse(window.localStorage.getItem('focapy-state-v2')).sessionTaskIds,[]);
   }
 });
