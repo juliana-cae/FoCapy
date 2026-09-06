@@ -24,6 +24,13 @@ test('task list offers in-place category creation, task editing and individual d
  assert.match(app,/className='text-button task-history-delete'/);
 });
 
+test('task history starts hidden and opens only through its explicit toggle',()=>{
+ assert.match(html,/id="task-history-toggle"[^>]*aria-expanded="false"/);
+ assert.match(html,/id="task-history-content"[^>]*hidden/);
+ assert.match(app,/function toggleTaskHistory\(\)/);
+ assert.match(app,/\$\('task-history-toggle'\)\.onclick=toggleTaskHistory/);
+});
+
 test('the running dashboard shows its task snapshots and starts the animated GIF',()=>{
  const timer=app.match(/function renderTimer\(\)\{([\s\S]*?)\nfunction renderInsights/)[1];
  const focusContext=app.match(/function renderFocusContext\(session\)\{([\s\S]*?)\nfunction renderTimer/)[1];
