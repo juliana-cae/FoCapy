@@ -11,8 +11,10 @@ test('focus header has category at the right and turns intention into static ses
   assert.match(html, /id="session-category"/);
   assert.match(app, /function renderFocusContext\(/);
   assert.match(css, /\.session-active \.timer-card\{margin-top:0;transform:translateY\(8%\)\}/);
-  assert.match(css, /html\[lang="en"\]\.session-active \.timer-card\{transform:translateY\(-2\.5%\)\}/);
+  assert.match(css, /html\[lang="en"\]\.session-active \.timer-card\{transform:translateY\(-2\.5%\) scale\(\.98\)\}/);
+  assert.match(css, /html\[lang="en"\]\.session-active \.timer-card\.is-stopwatch\{transform:translateY\(-2\.5%\) scale\(\.96\)\}/);
   assert.match(css, /html\[lang="pt-BR"\]\.session-active \.timer-card\{transform:translateY\(1\.25%\)\}/);
+  assert.match(css, /html\[lang="pt-BR"\]\.session-active \.timer-card\.is-stopwatch\{transform:translateY\(-1%\) scale\(\.96\)\}/);
   assert.match(css, /\.stopwatch-finish-button\{[^}]*box-shadow:0 0 0 2px/);
 });
 
