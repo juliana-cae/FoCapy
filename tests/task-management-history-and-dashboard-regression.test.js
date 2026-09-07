@@ -23,7 +23,10 @@ test('task list offers in-place category creation, task editing and individual d
  assert.match(app,/className='text-button task-edit'/);
  assert.match(app,/className='text-button task-delete'/);
  assert.match(app,/className='text-button task-history-delete'/);
- assert.match(html,/class="task-entry-field"[\s\S]*>Tarefa<\/span>/);
+ assert.match(html,/Crie tarefas que podem ser associadas à sua próxima sessão de foco/);
+ assert.match(html,/placeholder="Add Tarefa"/);
+ assert.doesNotMatch(html,/class="task-entry-field"><span>Tarefa<\/span>/);
+ assert.ok(app.includes("'Add Tarefa':'Add Task'"));
  assert.ok(css.includes('.add-task-form{display:grid;grid-template-columns:minmax(0,1fr) 112px auto'));
  assert.ok(css.includes('.task-entry-field{display:grid'));
  assert.ok(css.includes('.add-task-form #new-task-tag{width:112px'));
