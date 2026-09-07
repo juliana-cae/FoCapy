@@ -16,6 +16,6 @@ test('inventory includes Punzinho as rare and Xixi vencido as legendary',()=>{
 
 test('bottom navigation is hidden rather than merely disabled during an active focus session',()=>{
   assert.match(css,/\.session-active \.bottom-nav\{display:none\}/);
-  assert.match(css,/\.timer-card\.is-stopwatch \.timer-actions\{margin-top:10px\}/);
-  assert.match(css,/\.timer-card\.is-stopwatch \.stopwatch-finish-button\{margin-top:8px/);
+  assert.match(css,/\.timer-card\.is-stopwatch \.timer-actions\{margin-top:2px;gap:26px;transform:translateY\(-8px\)\}/);
+  assert.match(css,/\.timer-card\.is-stopwatch \.stopwatch-finish-button\{margin-top:10px;transform:translateY\(-8px\)/);
 });
