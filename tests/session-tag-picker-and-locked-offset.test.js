@@ -20,6 +20,12 @@ test('the focus session tag is an interactive control for changing the current s
   assert.match(app, /new Option\(state\.language==='en'\?'No category':'Sem categoria',''\)/);
 });
 
+test('deleting a category clears the active dashboard category and re-renders immediately', () => {
+  assert.match(app, /clearDeletedSessionTagReferences\(state\.current,name\)/);
+  assert.match(app, /state\.current=cleared\.current/);
+  assert.match(app, /if\(cleared\.selectedTag!==undefined\)state\.selectedTag=cleared\.selectedTag/);
+  assert.match(app, /renderSessionTags\(\);renderTimer\(\)/);
+});
 test('the locked-screen dashboard is positioned lower on the page', () => {
   assert.match(css, /html\[lang="en"\]\.session-active-lock \.timer-card\{transform:translateY\(18px\)\}/);
   assert.match(css, /\.session-category-picker\{[^}]*margin-left:auto/);

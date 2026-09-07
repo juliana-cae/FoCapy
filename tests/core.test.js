@@ -6,6 +6,7 @@ import {
   monthKey, rolloverMonthlyState, migrateLegacyInventory, advancePomoSession,
   COMPLETION_IMAGE_FILES, pickCompletionImage, mergeDefaultPhrases, nextSeasonCountdown,
   GOOD_MORNING_PHRASES, greetingForDay,
+  DEFAULT_SESSION_CATEGORIES, mergeDefaultSessionCategories,
 } from '../src/core.js';
 
 test('new inspirational defaults are added without overwriting saved phrases', () => { const merged=mergeDefaultPhrases(['Minha frase'],['Minha frase','Respire, e sinta que chegou.','Tudo passa.']); assert.deepEqual(merged,['Minha frase','Respire, e sinta que chegou.','Tudo passa.']); });
@@ -31,4 +32,22 @@ test('Pomodoro switches to pause after focus and rewards only after the final pa
 test('legacy plant inventory migrates to capybara items without losing quantities', () => { assert.deepEqual(migrateLegacyInventory({clover:3,redwood:1,tangerina:2}),{tangerina:5,'banho-chuva':1}); });
 test('month rollover archives the previous landscape as Compromisso and starts a clean month', () => { const state={monthKey:'2026-08',inventory:{clover:3,redwood:1},sessions:[{id:'s1'}],commitments:[]}; const rolled=rolloverMonthlyState(state,'2026-09'); assert.equal(rolled.monthKey,'2026-09'); assert.deepEqual(rolled.inventory,{}); assert.equal(rolled.commitments.length,1); assert.equal(rolled.commitments[0].title,'Compromisso'); assert.equal(rolled.commitments[0].monthKey,'2026-08'); assert.deepEqual(rolled.commitments[0].inventory,{clover:3,redwood:1}); assert.equal(rolled.commitments[0].sessionsCount,1); });
 test('same month does not archive or erase current plants', () => { const state={monthKey:'2026-09',inventory:{daisy:2},sessions:[],commitments:[]}; assert.deepEqual(rolloverMonthlyState(state,'2026-09'),state); });
+test('default session categories preserve the six requested names and colors', () => {
+  assert.deepEqual(DEFAULT_SESSION_CATEGORIES.map(({ name, color }) => ({ name, color })), [
+    { name: 'Tarefas domésticas', color: '#8e44ad' },
+    { name: 'Aula/reunião', color: '#e67e22' },
+    { name: 'Profissional/obrigações', color: '#c0392b' },
+    { name: 'Auto cuidado', color: '#e84393' },
+    { name: 'Estudo', color: '#27ae60' },
+    { name: 'Hobbies', color: '#2980b9' },
+  ]);
+});
+
+test('default categories merge with existing custom categories without duplicates', () => {
+  const merged = mergeDefaultSessionCategories([{ name: 'Estudo', color: '#111111' }, { name: 'Leitura', color: '#123456' }]);
+  assert.equal(merged.length, 7);
+  assert.equal(merged.find(tag => tag.name === 'Estudo').color, '#111111');
+  assert.equal(merged.find(tag => tag.name === 'Leitura').color, '#123456');
+});
+
 test('next season countdown uses the following local month boundary', () => { assert.deepEqual(nextSeasonCountdown(new Date(2026,8,30,23,0,0)),{days:0,hours:1,minutes:0}); assert.deepEqual(nextSeasonCountdown(new Date(2026,11,31,23,59,0)),{days:0,hours:0,minutes:1}); });

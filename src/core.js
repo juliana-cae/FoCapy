@@ -101,6 +101,22 @@ export function awardVegetation(inventory = {}, focusMinutes, random = Math.rand
   return { item, inventory: { ...inventory, [item.id]: (inventory[item.id] || 0) + 1 } };
 }
 
+export const DEFAULT_SESSION_CATEGORIES = [
+  { name: 'Tarefas domésticas', color: '#8e44ad', fontColor: '#ffffff' },
+  { name: 'Aula/reunião', color: '#e67e22', fontColor: '#15382e' },
+  { name: 'Profissional/obrigações', color: '#c0392b', fontColor: '#ffffff' },
+  { name: 'Auto cuidado', color: '#e84393', fontColor: '#ffffff' },
+  { name: 'Estudo', color: '#27ae60', fontColor: '#ffffff' },
+  { name: 'Hobbies', color: '#2980b9', fontColor: '#ffffff' },
+];
+
+export function mergeDefaultSessionCategories(tags = []) {
+  const existing = normalizeSessionTags(tags);
+  const defaults = DEFAULT_SESSION_CATEGORIES.map(tag => ({ ...tag }));
+  const mergedDefaults = defaults.map(defaultTag => existing.find(tag => tag.name.toLocaleLowerCase() === defaultTag.name.toLocaleLowerCase()) || defaultTag);
+  return [...mergedDefaults, ...existing.filter(tag => !defaults.some(defaultTag => defaultTag.name.toLocaleLowerCase() === tag.name.toLocaleLowerCase()))];
+}
+
 export const DEFAULT_TAG_COLOR = '#2d6c4d';
 export const DEFAULT_TAG_FONT_COLOR = '#15382e';
 function normalizeTagColor(color, fallback = DEFAULT_TAG_COLOR) { return /^#[0-9a-f]{6}$/i.test(String(color || '')) ? String(color).toLowerCase() : fallback; }
@@ -136,6 +152,13 @@ export function renameSessionTag(tags = [], name = '', nextName = '') {
   if (!key || !replacement || !normalized.some(tag => tag.name.toLocaleLowerCase() === key) || normalized.some(tag => tag.name.toLocaleLowerCase() === replacementKey && tag.name.toLocaleLowerCase() !== key)) return normalized;
   return normalized.map(tag => tag.name.toLocaleLowerCase() === key ? { ...tag, name: replacement } : tag);
 }
+export function clearDeletedSessionTagReferences(current = null, deletedName = '') {
+  const key = String(deletedName || '').trim().toLocaleLowerCase();
+  const active = current && typeof current === 'object' ? { ...current } : current;
+  if (!key || !active || String(active.tag || '').trim().toLocaleLowerCase() !== key) return { current: active, selectedTag: undefined };
+  return { current: { ...active, tag: '', tagColor: '', tagFontColor: '' }, selectedTag: '' };
+}
+
 export function removeSessionTag(tags = [], name = '') {
   const key = String(name || '').trim().toLocaleLowerCase();
   return normalizeSessionTags(tags).filter(tag => tag.name.toLocaleLowerCase() !== key);
