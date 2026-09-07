@@ -11,9 +11,11 @@ test('only Foco displays free rhythm choices while Pomo and Cronômetro use thei
   assert.match(app, /\$\('rhythm-choices'\)\.hidden=false/);
   assert.match(app, /hideDurationChoices=state\.sessionType!=='foco'/);
   assert.match(app, /durationGrid\.hidden=hideDurationChoices/);
+  assert.match(app, /session-kind-\$\{state\.sessionType\}/);
   assert.match(html, /id="session-completion-sound-button"[\s\S]*id="session-type"[\s\S]*id="free-duration"/);
   assert.match(css, /\.pomo-options\{[^}]*background:linear-gradient\(/);
   assert.doesNotMatch(css, /\.pomo-options\{[^}]*#f4e5dc/);
+  assert.match(css, /html\.session-kind-pomo[^}]*duration-grid/);
   assert.doesNotMatch(html, /pomo-summary|a frase muda a cada 35 segundos|rotação de 35 s/);
   assert.match(html, /id="time-display"[\s\S]*id="pomo-options"[\s\S]*id="pomo-running-info"/);
   assert.match(html, /id="focus-dashboard"[\s\S]*id="pomo-options"/);

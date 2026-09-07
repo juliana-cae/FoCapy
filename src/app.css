@@ -33,3 +33,4 @@
 .rhythm-controls{display:flex;align-items:center;gap:8px}.rhythm-controls .session-type-controls{margin:0;justify-content:flex-start}.rhythm-controls .session-kind select{min-width:0;width:auto;padding:6px 8px}.rhythm-controls .completion-sound-shortcut{width:26px;height:26px}
 .rhythm-controls .session-type-controls,.rhythm-controls .session-kind,.rhythm-controls .session-kind select{flex:0 0 auto}.rhythm-controls .session-kind{width:max-content}.rhythm-controls .session-kind select{max-width:108px}
 #rhythm-choices .duration-grid.is-hidden{display:none!important}
+html.session-kind-pomo #rhythm-choices .duration-grid,html.session-kind-cronometro #rhythm-choices .duration-grid{display:none!important}
