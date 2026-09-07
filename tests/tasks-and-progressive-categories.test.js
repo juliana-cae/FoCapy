@@ -14,15 +14,16 @@ test('tasks persist duplicate titles and session associations contain only exist
   assert.deepEqual(normalizeTasks([{ title: '  Planejar  ' }])[0], { id: 'task-1', title: 'Planejar', done: false });
 });
 
-test('task screen provides checklist association and Categories reveals management progressively', () => {
+test('task screen provides checklist association and Categories contains its controls directly', () => {
   assert.match(html, /id="tasks" class="screen"/);
   assert.match(html, /id="new-task"/);
   assert.match(html, /id="task-session-list"/);
   assert.match(html, /data-screen="tasks"/);
-  assert.match(html, /id="manage-tags"/);
-  assert.match(html, /id="tag-management"[^>]*hidden/);
+  assert.doesNotMatch(html, /id="manage-tags"/);
+  assert.match(html, /id="tag-settings-details"[^>]*hidden[\s\S]*id="tag-list"/);
+  assert.doesNotMatch(html, /id="tag-management"[^>]*hidden/);
   assert.match(html, /id="tag-editor"[^>]*hidden/);
-  assert.match(app, /function toggleTagManagement\(/);
+  assert.doesNotMatch(app, /\$\('manage-tags'\)\.onclick/);
   assert.match(app, /function renderTasks\(/);
   assert.match(app, /taskIdsForSession\(/);
 });
