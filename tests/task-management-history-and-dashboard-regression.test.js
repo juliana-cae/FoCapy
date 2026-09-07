@@ -5,6 +5,7 @@ import { taskHistoryForFilter } from '../src/core.js';
 
 const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const app=readFileSync(new URL('../src/app.js',import.meta.url),'utf8');
+const css=readFileSync(new URL('../src/app.css',import.meta.url),'utf8');
 const sessions=[
  {status:'completed',taskSnapshots:[{id:'a',title:'Plan',tag:'Work'}]},
  {status:'completed',taskSnapshots:[{id:'b',title:'Read',tag:'Study'}]},
@@ -22,6 +23,10 @@ test('task list offers in-place category creation, task editing and individual d
  assert.match(app,/className='text-button task-edit'/);
  assert.match(app,/className='text-button task-delete'/);
  assert.match(app,/className='text-button task-history-delete'/);
+ assert.match(html,/class="task-entry-field"[\s\S]*>Tarefa<\/span>/);
+ assert.ok(css.includes('.add-task-form{display:grid;grid-template-columns:minmax(0,1fr) 112px auto'));
+ assert.ok(css.includes('.task-entry-field{display:grid'));
+ assert.ok(css.includes('.add-task-form #new-task-tag{width:112px'));
 });
 
 test('task history starts hidden and opens only through its explicit toggle',()=>{
