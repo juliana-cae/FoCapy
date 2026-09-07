@@ -9,7 +9,8 @@ const css = readFileSync(new URL('../src/app.css', import.meta.url), 'utf8');
 test('only Foco displays free rhythm choices while Pomo and Cronômetro use their own controls', () => {
   assert.match(html, /id="rhythm-choices"/);
   assert.match(app, /\$\('rhythm-choices'\)\.hidden=false/);
-  assert.match(app, /durationGrid\.hidden=state\.sessionType!=='foco'/);
+  assert.match(app, /hideDurationChoices=state\.sessionType!=='foco'/);
+  assert.match(app, /durationGrid\.hidden=hideDurationChoices/);
   assert.match(html, /id="session-completion-sound-button"[\s\S]*id="session-type"[\s\S]*id="free-duration"/);
   assert.match(css, /\.pomo-options\{[^}]*background:linear-gradient\(/);
   assert.doesNotMatch(css, /\.pomo-options\{[^}]*#f4e5dc/);
