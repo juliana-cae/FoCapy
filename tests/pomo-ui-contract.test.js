@@ -17,8 +17,11 @@ test('only Foco displays free rhythm choices while Pomo and Cronômetro use thei
   assert.match(html, /id="focus-dashboard"[\s\S]*id="pomo-options"/);
   assert.equal((html.match(/id="pomo-options"/g)||[]).length, 1);
   assert.ok(html.indexOf('id="pomo-options"') < html.indexOf('id="focus-below-dashboard"'));
-  assert.match(app,/function editDashboardDuration\(\)\{if\(state\.sessionType==='cronometro'\)return/);
-  assert.match(app,/pomo-number-pad/);
+  assert.match(html,/id="free-duration"[^>]*disabled/);
+  assert.match(app,/target\.contentEditable==='true'\|\|document\.querySelector\('#duration-editor-pad'\)/);
+  assert.match(app,/data-duration-key="3"[\s\S]*data-duration-action="backspace"[\s\S]*data-duration-key="4"/);
+  assert.ok(app.includes("onpointerdown=event=>{event.preventDefault();target.textContent=target.textContent.slice(0,-1)"));
+  assert.match(app,/function frameRunningTimer\(\)\{return\}/);
   assert.match(app,/time\.hidden=active&&!state\.current/);
   assert.match(css,/\.focus-capy\{/);
   assert.match(css,/\.focus-capy-scene\{/);
