@@ -9,6 +9,9 @@ test('intention task dialog can create and immediately associate a new task',()=
  assert.match(html,/id="add-intention-task"/);
  assert.match(app,/function addIntentionTask\(/);
  assert.match(app,/state\.sessionTaskIds=\[\.\.\.state\.sessionTaskIds,created\.id\]/);
+ assert.match(app,/function syncCurrentTaskAssociation\(\)/);
+ assert.match(app,/state\.current\.taskIds=association\.taskIds/);
+ assert.match(app,/state\.current\.taskSnapshots=association\.taskSnapshots/);
  assert.match(app,/function renderIntentionTaskList\(\)/);
  assert.match(app,/renderIntentionTaskList\(\);renderTasks\(\)/);
  assert.match(app,/association\.onchange=\(\)=>\{[\s\S]*renderTasks\(\);renderIntentionTaskList\(\)/);
