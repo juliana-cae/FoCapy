@@ -21,6 +21,6 @@ test('the dashboard duration number is directly editable and custom duration kee
   assert.ok(app.includes("split(':')"));
   assert.match(app,/seconds>59/);
   assert.match(app,/free\.classList\.remove\('selected'\)/);
-  assert.match(app,/event\.key!=='Enter' && event\.key!=='Backspace'/);
+  assert.ok(app.includes("if(event.key==='Enter')"));
   assert.ok(app.includes("/^[0-9:]$/.test(event.key)"));
 });
