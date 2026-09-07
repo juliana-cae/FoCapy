@@ -22,7 +22,7 @@ test('only Foco displays free rhythm choices while Pomo and Cronômetro use thei
   assert.match(app,/data-duration-key="3"[\s\S]*data-duration-action="backspace"[\s\S]*data-duration-key="4"/);
   assert.ok(app.includes("onpointerdown=event=>{event.preventDefault();target.textContent=target.textContent.slice(0,-1)"));
   assert.match(app,/function frameRunningTimer\(\)\{return\}/);
-  assert.match(app,/time\.hidden=active&&!state\.current/);
+  assert.match(app,/progress\.hidden=active&&!state\.current/);
   assert.match(css,/\.focus-capy\{/);
   assert.match(css,/\.focus-capy-scene\{/);
   assert.match(app, /If you want true protection/);
