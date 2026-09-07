@@ -103,8 +103,27 @@ test('task category creation follows the requested two-row mobile arrangement', 
 
 test('task parents can be nested at any depth without allowing cycles', () => {
   assert.match(app, /function taskCanUseParent\(tasks,taskId,candidateParentId\)/);
-  assert.match(app, /tasks\.filter\(item=>item\.id!==task\.id&&taskCanUseParent\(tasks,task\.id,item\.id\)\)/);
+  assert.match(app, /tasks\.filter\(item=>!item\.done&&item\.id!==task\.id&&taskCanUseParent\(tasks,task\.id,item\.id\)\)/);
   assert.doesNotMatch(app, /tasks\.filter\(item=>item\.id!==task\.id&&!item\.parentTaskId\)/);
+});
+
+test('live task and category dragging previews the final placement before release', () => {
+  assert.match(app, /const previewMove=/);
+  assert.match(app, /drag-preview-shift/);
+  assert.match(app, /item\.style\.transform=`translateY/);
+  assert.match(app, /clearPreview\(\)/);
+  assert.match(css, /\.drag-preview-shift\{[^}]*transition:transform/);
+  assert.match(css, /\.drop-before\{[^}]*inset 0 4px/);
+  assert.match(css, /\.drop-after\{[^}]*inset 0 -4px/);
+});
+
+test('inline task editing keeps the title compact, changes priority, and excludes completed parents', () => {
+  assert.match(app, /input\.size=Math\.min\(28,Math\.max\(8,task\.title\.length\)\)/);
+  assert.match(app, /task-priority-picker/);
+  assert.match(app, /Object\.entries\(TASK_PRIORITIES\)/);
+  assert.match(app, /priority:priority\.value/);
+  assert.match(app, /tasks\.filter\(item=>!item\.done&&item\.id!==task\.id/);
+  assert.match(css, /\.task-edit-input\{[^}]*width:auto/);
 });
 
 test('task and category drag listeners calculate placement, use move helpers, and protect touch interaction', () => {
