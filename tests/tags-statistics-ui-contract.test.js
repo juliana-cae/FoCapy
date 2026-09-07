@@ -20,6 +20,6 @@ test('focus sessions expose persisted tags and a statistics destination', () => 
   assert.match(app, /function renderSessionTags\(\)\{const list=/);
   assert.doesNotMatch(app, /\$\('session-tag-select'\)/);
   assert.match(app, /function renderStatistics\(/);
-  assert.match(app, /state\.tags=addSessionTag\(/);
+  assert.match(app, /state\.tags=normalizeCategoryTree\(\[\.\.\.state\.tags/);
   assert.match(app, /state\.current\.tag=state\.selectedTag\|\|''/);
 });

@@ -126,6 +126,22 @@ test('inline task editing keeps the title compact, changes priority, and exclude
   assert.match(css, /\.task-edit-input\{[^}]*width:auto/);
 });
 
+test('drag preview is deliberately throttled after each detected destination', () => {
+  assert.match(app, /PREVIEW_COOLDOWN_MS=500/);
+  assert.match(app, /now-lastPreviewAt<PREVIEW_COOLDOWN_MS/);
+  assert.match(app, /lastPreviewKey/);
+});
+
+test('initial category creation can create a highlighted subcategory', () => {
+  assert.match(html, /id="new-session-tag-parent"/);
+  assert.match(html, /Subcategoria\?/);
+  assert.match(html, /session-category-create/);
+  assert.match(app, /parentPicker=\$\('new-session-tag-parent'\)/);
+  assert.match(app, /parentId:parent\?\.value\|\|''/);
+  assert.match(css, /\.session-category-create\{[^}]*#f5faed/);
+  assert.match(css, /\.session-category-parent\{/);
+});
+
 test('task and category drag listeners calculate placement, use move helpers, and protect touch interaction', () => {
   assert.match(app, /moveCategory/);
   assert.match(app, /moveTask/);
