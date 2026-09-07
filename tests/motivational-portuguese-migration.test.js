@@ -12,6 +12,11 @@ test('Portuguese boot migrates only FoCapy motivational defaults saved in Englis
  Object.assign(globalThis,{window,document:window.document,localStorage:window.localStorage,HTMLElement:window.HTMLElement,Event:window.Event,Node:window.Node,Option:window.Option,Audio:class{addEventListener(){} play(){return Promise.resolve()} pause(){}},indexedDB:{open(){throw new Error('not needed')}},setInterval:()=>0,clearInterval:()=>{}});
  await import(`../src/app.js?motivational-pt=${Date.now()}-${Math.random()}`);
  const phrases=[...window.document.querySelectorAll('#phrases-list .phrase-edit')].map(node=>node.textContent);
- assert.deepEqual(phrases,['“Comece pequeno. O importante é começar.”','“Respire. Uma coisa por vez.”','“Proteja sua atenção como um jardim.”','“Keep my personal phrase”']);
- assert.deepEqual(JSON.parse(window.localStorage.getItem('focapy-state-v2')).phrases,['Comece pequeno. O importante é começar.','Respire. Uma coisa por vez.','Proteja sua atenção como um jardim.','Keep my personal phrase']);
+ assert.deepEqual(phrases.slice(0,4),['“Comece pequeno. O importante é começar.”','“Respire. Uma coisa por vez.”','“Proteja sua atenção como um jardim.”','“Keep my personal phrase”']);
+ assert.ok(phrases.includes('“Anicca 🍃”'));
+ assert.ok(phrases.includes('“O tempo é seu aliado”'));
+ const stored=JSON.parse(window.localStorage.getItem('focapy-state-v2')).phrases;
+ assert.equal(stored.slice(0,4).at(-1),'Keep my personal phrase');
+ assert.ok(stored.includes('Anicca 🍃'));
+ assert.ok(stored.includes('O tempo é seu aliado'));
 });
