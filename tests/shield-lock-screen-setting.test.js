@@ -11,9 +11,11 @@ test('Blindado exposes a persisted screen-pinning preference in settings',()=>{
   assert.match(html,/id="shield-lock-screen-setting"[^>]*class="strict-focus-settings"/);
   assert.match(html,/>Fixar Tela<\/b>/);
   assert.doesNotMatch(html,/Fixar FoCapy durante a sessão|O Android exibirá a confirmação nativa/);
-  assert.match(css,/\.strict-focus-settings[^}]*padding:18px/);
+  assert.ok(html.indexOf('dialog-note') < html.indexOf('settings-delete-account'));
+  assert.ok(css.includes('.strict-focus-settings{margin:18px 0;padding:18px 16px'));
   assert.match(css,/\.completion-picker\{[^}]*display:grid/);
-  assert.match(css,/\.language-picker\{[^}]*display:grid/);
+  assert.match(css,/\#settings-dialog\{[^}]*overscroll-behavior:contain/);
+  assert.match(css,/\#settings-dialog\{[^}]*-webkit-overflow-scrolling:touch/);
   assert.match(app,/shield-lock-screen-toggle/);
 });
 
