@@ -9,7 +9,8 @@ const plugin=readFileSync(new URL('../android/app/src/main/java/com/focusgrove/p
 
 test('Blindado exposes a persisted screen-pinning preference in settings',()=>{
   assert.match(html,/id="shield-lock-screen-setting"[^>]*class="strict-focus-settings"/);
-  assert.match(html,/>Fixar Tela<\/b>/);
+  assert.match(html,/>Ative aqui para intensificar sua blindagem<\/small>/);
+  assert.ok(app.includes("'Ative aqui para intensificar sua blindagem':'Enable this to intensify your shield'"));
   assert.doesNotMatch(html,/Fixar FoCapy durante a sessão|O Android exibirá a confirmação nativa/);
   assert.ok(html.indexOf('dialog-note') < html.indexOf('settings-delete-account'));
   assert.ok(css.includes('.strict-focus-settings{margin:18px 0;padding:18px 16px'));
