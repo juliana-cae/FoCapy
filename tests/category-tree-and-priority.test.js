@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { addTask, categoryOptions, moveCategory, moveTask, normalizeCategoryTree, normalizeTasks, reorderCategories, reorderTasks, TASK_PRIORITIES } from '../src/core.js';
+import { addTask, categoryOptions, moveCategory, moveTask, normalizeCategoryTree, normalizeTasks, reorderCategories, reorderTasks, taskStatisticsForPeriod, TASK_PRIORITIES } from '../src/core.js';
 import { readFileSync } from 'node:fs';
 
 const app = readFileSync(new URL('../src/app.js', import.meta.url), 'utf8');
@@ -149,4 +149,27 @@ test('task and category drag listeners calculate placement, use move helpers, an
   assert.match(css, /\.category-drag-handle[^}]*touch-action:none/);
   assert.doesNotMatch(app, /task-reorder-/);
   assert.doesNotMatch(app, /category-reorder-/);
+});
+
+test('task statistics separate selected-period completion from current backlog and hierarchy', () => {
+  const stats=taskStatisticsForPeriod([
+    {id:'top',title:'Top',tag:'Trabalho',categoryId:'work',priority:'high',done:true,completedAt:'2026-09-07T10:00:00Z'},
+    {id:'child',title:'Child',tag:'Trabalho',categoryId:'work',priority:'urgent',parentTaskId:'top',done:false},
+    {id:'low',title:'Low',priority:'low',done:true,completedAt:'2026-08-01T10:00:00Z'}
+  ],'daily',new Date('2026-09-07T18:00:00Z'));
+  assert.equal(stats.completedTotal,1);
+  assert.equal(stats.openTotal,1);
+  assert.deepEqual([stats.subtasksDone,stats.subtasksTotal],[0,1]);
+  assert.equal(stats.priorities.find(item=>item.priority==='high').completed,1);
+  assert.equal(stats.priorities.find(item=>item.priority==='urgent').open,1);
+  assert.deepEqual(stats.categories[0],{key:'work',name:'Trabalho',completed:1,open:1});
+});
+
+test('task statistics UI exposes priorities, hierarchy and category rows', () => {
+  assert.match(html, /id="task-statistics-summary"/);
+  assert.match(html, /id="task-priority-statistics"/);
+  assert.match(html, /id="task-category-statistics"/);
+  assert.match(app, /taskStatisticsForPeriod\(state\.tasks,state\.statsPeriod\)/);
+  assert.match(app, /subtasksDone/);
+  assert.match(css, /\.task-statistics-summary\{/);
 });
