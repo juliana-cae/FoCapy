@@ -5,6 +5,7 @@ import { createStopwatchSession, finishSession, awardVegetation } from '../src/c
 
 const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const app=readFileSync(new URL('../src/app.js',import.meta.url),'utf8');
+const css=readFileSync(new URL('../src/app.css',import.meta.url),'utf8');
 
 test('a stopwatch session counts elapsed time upward and finalizes its real focused duration',()=>{
   const session=createStopwatchSession({label:'Cronômetro — leitura'});
@@ -37,4 +38,12 @@ test('Tipo offers Cronômetro and the UI starts it without a preset duration',()
   assert.match(app,/state\.current\.tag=tag/);
   assert.match(app,/info\.hidden=!pomoRunning/);
   assert.doesNotMatch(app,/if\(state\.current\?\.isStopwatch&&state\.current\.elapsedSeconds>0\)\{completeSession\(\);return\}/);
+});
+
+test('session type controls share the rhythm header with Livre and no redundant Tipo label',()=>{
+  assert.match(html,/class="rhythm-controls"[\s\S]*id="session-completion-sound-button"[\s\S]*id="session-type"[\s\S]*id="free-duration"/);
+  assert.match(html,/id="session-type" aria-label="Tipo de sessão"/);
+  assert.doesNotMatch(html,/<label for="session-type">Tipo<\/label>/);
+  assert.match(css,/\.rhythm-controls\{/);
+  assert.match(css,/\.rhythm-controls \.session-kind select\{[^}]*width:auto/);
 });

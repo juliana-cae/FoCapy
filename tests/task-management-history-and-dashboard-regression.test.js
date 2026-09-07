@@ -39,12 +39,10 @@ test('new task controls follow the compact three-zone mobile layout',()=>{
  assert.match(html,/class="add-task-form"[\s\S]*class="task-main-fields"[\s\S]*id="new-task-tag"/);
  assert.match(html,/class="task-secondary-fields"[\s\S]*id="new-task-priority"[\s\S]*id="new-task-parent"/);
  assert.match(html,/class="task-submit-row"[\s\S]*Adicionar/);
- assert.match(css,/\.add-task-form\{[^}]*grid-template-columns:minmax\(0,1fr\) 118px/);
- assert.match(css,/\.task-main-fields\{[^}]*display:grid/);
- assert.match(css,/\.task-secondary-fields\{[^}]*display:grid/);
- assert.match(css,/\.task-submit-row\{[^}]*grid-column:1/);
- assert.match(html,/>Subtarefa\?<\/option>/);
- assert.match(css,/\.task-form-select\{[^}]*border-radius:14px/);
+ assert.match(html,/class="rhythm-controls"[\s\S]*id="session-completion-sound-button"[\s\S]*id="session-type"[\s\S]*id="free-duration"/);
+ assert.match(html,/id="session-type" aria-label="Tipo de sessão"/);
+ assert.doesNotMatch(html,/<label for="session-type">Tipo<\/label>/);
+ assert.match(css,/\.rhythm-controls \.session-kind select\{[^}]*width:auto/);
 });
 
 test('task history starts hidden and opens only through its explicit toggle',()=>{

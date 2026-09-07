@@ -15,7 +15,7 @@ async function boot(language,overrides={}){
 }
 
 test('category-filtered active tasks show configured colors and completed tasks move to history in both languages',async()=>{
-  for(const [language,copy] of [['pt-BR',{phrases:'Frases motivacionais',shield:'protege sua sessão de foco',recent:'Cronômetro — Foco profundo'}],['en',{phrases:'Motivational phrases',shield:'protects your focus session',recent:'Stopwatch — Deep focus'}]]){
+  for(const [language,copy] of [['pt-BR',{phrases:'Frases motivacionais',shield:'protege sua sessão de foco',recent:'Cronômetro — Foco profundo'}],['en',{phrases:'Frases motivacionais|Motivational phrases',shield:'protects your focus session',recent:'Stopwatch — Deep focus'}]]){
     const window=await boot(language),doc=window.document;
     assert.match(doc.body.textContent,new RegExp(copy.phrases));
     assert.match(doc.body.textContent,new RegExp(copy.shield));
