@@ -12,9 +12,9 @@ test('leaving any running focus pauses it and shows the sad capybara on return',
 });
 
 test('the dashboard duration number is directly editable and custom duration keeps Livre highlighted',()=>{
-  assert.match(html,/id="time-display"[^>]*class="time-display"[^>]*type="button"/);
+  assert.match(html,/id="time-display"[^>]*class="time-display"[^>]*data-i18n-dynamic="true">25:00<\/div>/);
   assert.match(app,/function editDashboardDuration\(/);
-  assert.match(app,/target\.replaceWith\(input\)/);
+  assert.match(app,/target\.contentEditable='true'/);
   assert.match(app,/free\.textContent='Livre'/);
   assert.match(app,/free\.classList\.add\('selected'\)/);
 });

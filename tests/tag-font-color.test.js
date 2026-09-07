@@ -34,7 +34,7 @@ test('tag font color is applied consistently to dashboard, task badges and stati
 
 test('session category management renders outlined category boxes with a colored active state',()=>{
   assert.match(app,/select\.className='tag-select-button tag-category-option'/);
-  assert.match(app,/title\.style\.color=item\.fontColor/);
+  assert.match(app,/title\.style\.color=state\.selectedTag===item\.name\?item\.fontColor:'#000'/);
   assert.match(app,/select\.style\.background=state\.selectedTag===item\.name\?item\.color:'transparent'/);
   assert.match(app,/select\.setAttribute\('aria-pressed',String\(state\.selectedTag===item\.name\)\)/);
   assert.match(css,/\.tag-category-option\{[^}]*border:1px solid/);
