@@ -70,6 +70,37 @@ test('task creation and inline editor expose a parent task selector and indent c
   assert.match(app, /parentTaskId/);
 });
 
+test('task and category nesting can be removed from their compact lower-left controls', () => {
+  assert.match(app, /task-remove-nesting/);
+  assert.match(app, /category-remove-nesting/);
+  assert.match(app, /Retirar \$\{task\.title\} de subtarefa/);
+  assert.match(app, /Retirar \$\{item\.name\} de subcategoria/);
+  assert.match(app, /parentTaskId:''/);
+  assert.match(app, /parentId:''/);
+  assert.match(css, /\.remove-nesting-button\{/);
+});
+
+test('active task cards keep title data above a distinct action line and deepen visible nesting', () => {
+  assert.match(app, /task-primary-line/);
+  assert.match(app, /task-actions-line/);
+  assert.match(app, /actions\.append\(unnest,complete,edit,remove\)/);
+  assert.match(css, /\.task-actions-line\{[^}]*border-top/);
+  assert.match(css, /\.task-subtask\{[^}]*margin-left:calc\(34px/);
+  assert.match(css, /\.category-subcategory\{[^}]*margin-left:calc/);
+});
+
+test('task category creation follows the requested two-row mobile arrangement', () => {
+  assert.match(html, /class="tag-create task-category-create"/);
+  assert.match(html, /placeholder="Nome da categoria"/);
+  assert.match(html, /Escolher cor/);
+  assert.match(html, /Cor da fonte/);
+  assert.match(html, /É subcategoria\?/);
+  assert.match(html, /task-category-create-button/);
+  assert.match(app, /state\.language==='en'\?'Is subcategory\?':'É subcategoria\?'/);
+  assert.match(css, /\.task-category-create\{[^}]*grid-template-columns:minmax\(0,1fr\) minmax\(0,1fr\)/);
+  assert.match(css, /\.category-name-field\{[^}]*grid-column:1 \/ -1/);
+});
+
 test('task and category drag listeners calculate placement, use move helpers, and protect touch interaction', () => {
   assert.match(app, /moveCategory/);
   assert.match(app, /moveTask/);
