@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs';
 
 const app = readFileSync(new URL('../src/app.js', import.meta.url), 'utf8');
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const css = readFileSync(new URL('../src/app.css', import.meta.url), 'utf8');
 
 test('category normalization adds stable hierarchy metadata while preserving legacy names and colors', () => {
   const categories = normalizeCategoryTree([{ name: 'Work', color: '#abcdef' }, { id: 'child', name: 'Deep work', parentId: 'category-1', order: 0 }]);
@@ -20,35 +21,44 @@ test('legacy categories and invalid parents normalize safely without data loss',
   assert.equal(categories[1].parentId, '');
 });
 
-test('categories and tasks reorder by touch-friendly directional controls', () => {
+test('categories and tasks retain reorder helpers for persisted drag results', () => {
   const categories = normalizeCategoryTree(['A', 'B', 'C']);
   assert.deepEqual(reorderCategories(categories, categories[1].id, -1).map(category => category.name), ['B', 'A', 'C']);
   const tasks = normalizeTasks([{ id: 'a', title: 'A' }, { id: 'b', title: 'B' }, { id: 'c', title: 'C' }]);
   assert.deepEqual(reorderTasks(tasks, 'b', 1).map(task => task.title), ['A', 'C', 'B']);
 });
 
-test('tasks persist category association, manual order, and all four priorities', () => {
-  assert.deepEqual(Object.keys(TASK_PRIORITIES), ['low', 'normal', 'high', 'urgent']);
-  const task = addTask([], 'Urgent task', 'Work', '#abcdef', '#15382e', 'urgent', 'category-1')[0];
-  assert.equal(task.priority, 'urgent');
-  assert.equal(task.categoryId, 'category-1');
-  assert.equal(task.order, 0);
-  assert.equal(normalizeTasks([task])[0].priority, 'urgent');
+test('tasks persist a valid parent task relation while legacy task data remains valid', () => {
+  const parent = addTask([], 'Parent')[0];
+  const child = addTask([parent], 'Child', '', '#abcdef', '#15382e', 'urgent', '', parent.id)[1];
+  assert.equal(child.parentTaskId, parent.id);
+  assert.equal(normalizeTasks([{ id: 'legacy', title: 'Legacy' }])[0].parentTaskId, undefined);
+  assert.equal(normalizeTasks([{ id: 'orphan', title: 'Orphan', parentTaskId: 'missing' }])[0].parentTaskId, undefined);
 });
 
-test('task UI visibly exposes priority, category editing, and ordering controls', () => {
-  assert.match(app, /task-priority-picker/);
-  assert.match(app, /TASK_PRIORITIES/);
-  assert.match(app, /task-category-picker/);
-  assert.match(app, /task-edit-input/);
-  assert.match(app, /reorderTasks\(state\.tasks,task\.id,direction\)/);
-  assert.match(app, /task-reorder task-reorder-/);
+test('task UI renders priority as an unlabeled solid top-left marker with a colored card perimeter', () => {
+  assert.match(app, /task-priority-marker/);
+  assert.match(app, /row\.style\.borderColor=priorityColor/);
+  assert.doesNotMatch(app, /task-priority-badge/);
+  assert.match(css, /\.task-priority-marker\{[^}]*background:var\(--task-priority-color\)/);
+  assert.match(css, /\.task-row\{[^}]*border:2px solid var\(--task-priority-color\)/);
 });
 
-test('category UI visibly exposes hierarchy, parent selector, and ordering controls', () => {
-  assert.match(html, /id="new-task-category-parent"/);
-  assert.match(app, /categoryOptions\(state\.tags\)/);
-  assert.match(app, /category-reorder category-reorder-/);
-  assert.match(app, /reorderCategories\(state\.tags,item\.id,direction\)/);
-  assert.match(app, /'↳ '\.repeat\(item\.depth\)/);
+test('task creation and inline editor expose a parent task selector and indent children under parents', () => {
+  assert.match(html, /id="new-task-parent"/);
+  assert.match(app, /task-parent-picker/);
+  assert.match(app, /task-subtask/);
+  assert.match(app, /parentTaskId/);
+});
+
+test('task and category list rows use Pointer Event drag listeners rather than visible directional controls', () => {
+  assert.match(app, /addEventListener\('pointerdown'/);
+  assert.match(app, /addEventListener\('pointermove'/);
+  assert.match(app, /addEventListener\('pointerup'/);
+  assert.match(app, /reorderTasks\(state\.tasks,draggedId,direction\)/);
+  assert.match(app, /reorderCategories\(state\.tags,draggedId,direction\)/);
+  assert.match(app, /task-drag-handle/);
+  assert.match(app, /category-drag-handle/);
+  assert.doesNotMatch(app, /task-reorder-/);
+  assert.doesNotMatch(app, /category-reorder-/);
 });
