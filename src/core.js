@@ -17,9 +17,10 @@ export const VEGETATION = [
   { id:'palmeira-amaldicoada',name:'Palmeira',icon:'🌴',rarity:'amaldiçoado',minMinutes:1 },
 ];
 
-export function createSession({ minutes, label = 'Foco' }) {
-  const safeMinutes = Math.max(1, Math.round(Number(minutes) || 25));
-  return { id: `session-${Date.now()}-${Math.random().toString(16).slice(2)}`, label: String(label).trim() || 'Foco', totalSeconds: safeMinutes * 60, elapsedSeconds: 0, status: 'ready', focusMinutes: 0, growthStage: 'seed', createdAt: new Date().toISOString() };
+export function createSession({ minutes, seconds, label = 'Foco' }) {
+  const explicitSeconds = Number(seconds);
+  const safeSeconds = Number.isFinite(explicitSeconds) && explicitSeconds > 0 ? Math.round(explicitSeconds) : Math.max(1, Math.round(Number(minutes) || 25)) * 60;
+  return { id: `session-${Date.now()}-${Math.random().toString(16).slice(2)}`, label: String(label).trim() || 'Foco', totalSeconds: safeSeconds, elapsedSeconds: 0, status: 'ready', focusMinutes: 0, growthStage: 'seed', createdAt: new Date().toISOString() };
 }
 export function createStopwatchSession({ label = 'Cronômetro' } = {}) {
   return { id: `session-${Date.now()}-${Math.random().toString(16).slice(2)}`, label: String(label).trim() || 'Cronômetro', totalSeconds: 0, elapsedSeconds: 0, status: 'ready', focusMinutes: 0, growthStage: 'seed', isStopwatch: true, createdAt: new Date().toISOString() };

@@ -17,4 +17,10 @@ test('the dashboard duration number is directly editable and custom duration kee
   assert.match(app,/target\.contentEditable='true'/);
   assert.match(app,/free\.textContent='Livre'/);
   assert.match(app,/free\.classList\.add\('selected'\)/);
+  assert.match(app,/function parseDashboardDuration\(value\)/);
+  assert.ok(app.includes("split(':')"));
+  assert.match(app,/seconds>59/);
+  assert.match(app,/free\.classList\.remove\('selected'\)/);
+  assert.match(app,/event\.key!=='Enter' && event\.key!=='Backspace'/);
+  assert.ok(app.includes("/^[0-9:]$/.test(event.key)"));
 });
