@@ -94,11 +94,17 @@ test('task category creation follows the requested two-row mobile arrangement', 
   assert.match(html, /placeholder="Nome da categoria"/);
   assert.match(html, /Escolher cor/);
   assert.match(html, /Cor da fonte/);
-  assert.match(html, /É subcategoria\?/);
+  assert.match(html, /Subcategoria\?/);
   assert.match(html, /task-category-create-button/);
-  assert.match(app, /state\.language==='en'\?'Is subcategory\?':'É subcategoria\?'/);
+  assert.match(app, /state\.language==='en'\?'Subcategory\?':'Subcategoria\?'/);
   assert.match(css, /\.task-category-create\{[^}]*grid-template-columns:minmax\(0,1fr\) minmax\(0,1fr\)/);
   assert.match(css, /\.category-name-field\{[^}]*grid-column:1 \/ -1/);
+});
+
+test('task parents can be nested at any depth without allowing cycles', () => {
+  assert.match(app, /function taskCanUseParent\(tasks,taskId,candidateParentId\)/);
+  assert.match(app, /tasks\.filter\(item=>item\.id!==task\.id&&taskCanUseParent\(tasks,task\.id,item\.id\)\)/);
+  assert.doesNotMatch(app, /tasks\.filter\(item=>item\.id!==task\.id&&!item\.parentTaskId\)/);
 });
 
 test('task and category drag listeners calculate placement, use move helpers, and protect touch interaction', () => {
