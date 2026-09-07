@@ -43,5 +43,5 @@ test('the running dashboard shows its task snapshots and starts the animated GIF
  const timer=app.match(/function renderTimer\(\)\{([\s\S]*?)\nfunction renderInsights/)[1];
  const focusContext=app.match(/function renderFocusContext\(session\)\{([\s\S]*?)\nfunction renderTimer/)[1];
  assert.match(focusContext,/session\?\.taskSnapshots\|\|\[\]/);
- assert.match(timer,/renderFocusCapy\(running\|\|pomoEditing\)/);
+ assert.match(timer,/renderFocusCapy\(running\)/);
 });

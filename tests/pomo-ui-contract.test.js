@@ -23,7 +23,7 @@ test('only Foco displays free rhythm choices while Pomo and Cronômetro use thei
   assert.ok(app.includes("onpointerdown=event=>{event.preventDefault();target.textContent=target.textContent.slice(0,-1)"));
   assert.match(app,/function frameRunningTimer\(\)\{return\}/);
   assert.match(app,/const pomoEditing=state\.sessionType==='pomo'&&!state\.current/);
-  assert.match(app,/renderFocusCapy\(running\|\|pomoEditing\)/);
+  assert.match(app,/renderFocusCapy\(running\)/);
   assert.match(app,/const nextInput=inputs\[index\+1\]/);
   assert.match(app,/nextInput\.focus\(\)/);
   assert.doesNotMatch(css,/\.timer-card\.pomo-editing \.tree-scene/);
