@@ -13,7 +13,13 @@ test('only Foco displays free rhythm choices while Pomo and Cronômetro use thei
   assert.match(css, /\.pomo-options\{[^}]*background:var\(--cream\)/);
   assert.doesNotMatch(css, /\.pomo-options\{[^}]*#f4e5dc/);
   assert.doesNotMatch(html, /pomo-summary|a frase muda a cada 35 segundos|rotação de 35 s/);
-  assert.match(html, /id="time-display"[\s\S]*id="pomo-running-info"/);
+  assert.match(html, /id="time-display"[\s\S]*id="pomo-options"[\s\S]*id="pomo-running-info"/);
+  assert.match(html, /id="focus-dashboard"[\s\S]*id="pomo-options"/);
+  assert.equal((html.match(/id="pomo-options"/g)||[]).length, 1);
+  assert.ok(html.indexOf('id="pomo-options"') < html.indexOf('id="focus-below-dashboard"'));
+  assert.match(app, /target\.inputMode='text'/);
+  assert.match(app, /target\.enterKeyHint='done'/);
+  assert.match(app, /panel\.hidden=!active\|\|Boolean\(state\.current\)/);
   assert.match(app,/const pomoRunning=state\.sessionType==='pomo'&&Boolean\(c\.pomoPhase\)/);
   assert.match(app,/if\(!pomoRunning\)\{\$\('pomo-break-info'\)\.textContent=''/);
   assert.doesNotMatch(app, /PAUSA · CICLO|FOCO · CICLO/);
