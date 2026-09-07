@@ -23,3 +23,8 @@ test('duration selection changes built-in gongs but preserves uploaded custom au
   assert.match(app,/gongo-2':'\.\.\/assets\/completion-gongo-2\.mp3/);
   assert.match(app,/gongo-3':'\.\.\/assets\/completion-gongo-3\.mp3/);
 });
+
+test('completed Pomodoro and stopwatch sessions choose the gong from measured focus time',()=>{
+  assert.match(app,/selectBuiltInCompletionTone\(done\.focusMinutes\)/);
+  assert.match(app,/!state\.completionToneManual&&!isCustomCompletionTone\(\)/);
+});
