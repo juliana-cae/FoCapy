@@ -11,7 +11,7 @@ test('the home screen has a fixed good-morning greeting near its title',()=>{
 });
 
 test('only motivational phrases are editable in the rhythm screen',()=>{
-  assert.match(html,/<h2>Frases motivacionais<\/h2>/);
+  assert.match(html,/id="phrases-toggle"[^>]*>\s*<span>Frases motivacionais<\/span>/);
   assert.doesNotMatch(html,/Frases de bom dia[^<]*<[^>]*(add-phrase-form|phrases-list)/);
   assert.match(app,/savedMotivational=.*filter\(phrase=>!GOOD_MORNING_PHRASES\.includes\(phrase\)\)/);
 });

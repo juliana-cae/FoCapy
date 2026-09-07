@@ -20,9 +20,18 @@ test('Blindado exposes a persisted screen-pinning preference in settings',()=>{
   assert.match(app,/shield-lock-screen-toggle/);
 });
 
+test('a persisted keep-awake preference can keep any active focus session awake',()=>{
+ assert.match(html,/id="keep-screen-awake-toggle"/);
+ assert.match(html,/Manter a tela acesa durante sessão de foco/);
+ assert.match(app,/keepScreenAwake:Boolean\(s\.keepScreenAwake\)/);
+ assert.match(app,/keepScreenAwake:state\.keepScreenAwake/);
+ assert.match(plugin,/boolean keepScreenAwake = call\.getBoolean\("keepScreenAwake", false\)/);
+ assert.match(plugin,/if \(keepScreenAwake\)[\s\S]*FLAG_KEEP_SCREEN_ON/);
+});
+
 test('native screen pinning starts only while the opted-in Blindado session is running and releases afterward',()=>{
   assert.match(app,/shieldLockScreen:state\.shieldLockScreen/);
   assert.match(app,/lockScreen:running&&state\.shieldLockScreen/);
-  assert.match(plugin,/if \(lockScreen\)[\s\S]*startLockTask\(\)[\s\S]*else[\s\S]*stopLockTask\(\)/);
+  assert.match(plugin,/if \(active && lockScreen\)[\s\S]*startLockTask\(\)[\s\S]*else[\s\S]*stopLockTask\(\)/);
   assert.doesNotMatch(plugin,/AccessibilityService|FocusSessionStore|ACTION_ACCESSIBILITY_SETTINGS/);
 });

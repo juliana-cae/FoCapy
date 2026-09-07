@@ -5,10 +5,10 @@ const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const app=readFileSync(new URL('../src/app.js',import.meta.url),'utf8');
 const css=readFileSync(new URL('../src/app.css',import.meta.url),'utf8');
 
-test('leaving any running focus pauses it and shows the sad capybara on return',()=>{
+test('turning the display off does not pause a running focus session',()=>{
  assert.match(app,/function pauseForExit\(\)\{if\(state\.current\?\.status!=='running'/);
- assert.match(app,/document\.addEventListener\('visibilitychange',\(\)=>\{if\(document\.hidden\)\{pauseForExit\(\)/);
- assert.match(app,/else if\(state\.shieldPaused\)\{showShieldPausedNotice\(\)/);
+ assert.doesNotMatch(app,/document\.addEventListener\('visibilitychange',\(\)=>\{if\(document\.hidden\)\{pauseForExit\(\)/);
+ assert.match(app,/document\.addEventListener\('visibilitychange',\(\)=>\{if\(!document\.hidden&&state\.shieldPaused\)/);
 });
 
 test('the dashboard duration number is directly editable and custom duration keeps Livre highlighted',()=>{

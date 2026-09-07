@@ -14,16 +14,16 @@ public class FocusScreenPlugin extends Plugin {
         boolean active = call.getBoolean("active", false);
         boolean shielded = call.getBoolean("shielded", false);
         boolean lockScreen = call.getBoolean("lockScreen", false);
+        boolean keepScreenAwake = call.getBoolean("keepScreenAwake", false);
         getActivity().runOnUiThread(() -> {
-            if (active) {
+            if (keepScreenAwake) {
                 getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                if (lockScreen) {
-                    getActivity().startLockTask();
-                } else {
-                    getActivity().stopLockTask();
-                }
             } else {
                 getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
+            if (active && lockScreen) {
+                getActivity().startLockTask();
+            } else {
                 getActivity().stopLockTask();
             }
             ((MainActivity) getActivity()).setShieldedFocusActive(active && shielded);
