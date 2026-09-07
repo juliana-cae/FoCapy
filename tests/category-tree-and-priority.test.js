@@ -126,10 +126,12 @@ test('inline task editing keeps the title compact, changes priority, and exclude
   assert.match(css, /\.task-edit-input\{[^}]*width:auto/);
 });
 
-test('drag preview is deliberately throttled after each detected destination', () => {
-  assert.match(app, /PREVIEW_COOLDOWN_MS=500/);
-  assert.match(app, /now-lastPreviewAt<PREVIEW_COOLDOWN_MS/);
-  assert.match(app, /lastPreviewKey/);
+test('drag preview waits for a stable destination before moving the list', () => {
+  assert.match(app, /PREVIEW_SETTLE_MS=180/);
+  assert.match(app, /setTimeout\(commitPreview,PREVIEW_SETTLE_MS\)/);
+  assert.match(app, /if\(key===pendingKey\)return/);
+  assert.match(app, /clearPending\(\)/);
+  assert.doesNotMatch(app, /PREVIEW_COOLDOWN_MS/);
 });
 
 test('initial category creation can create a highlighted subcategory', () => {
@@ -156,7 +158,7 @@ test('task and category drag listeners calculate placement, use move helpers, an
   assert.match(app, /addEventListener\('pointerdown'/);
   assert.match(app, /addEventListener\('pointermove'/);
   assert.match(app, /addEventListener\('pointerup'/);
-  assert.match(app, /if\(event\.type==='pointerup'\)resolveDrop\(event\)/);
+  assert.match(app, /const finish=event=>\{if\(!draggedId\)return;clearPending\(\)/);
   assert.match(app, /moveTask\(state\.tasks,draggedId,targetId,placement\)/);
   assert.match(app, /moveCategory\(state\.tags,draggedId,targetId,placement\)/);
   assert.match(app, /task-drag-handle/);
