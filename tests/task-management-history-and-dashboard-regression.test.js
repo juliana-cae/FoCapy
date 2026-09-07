@@ -43,7 +43,7 @@ test('new task controls follow the compact three-zone mobile layout',()=>{
  assert.match(css,/\.task-main-fields\{[^}]*display:grid/);
  assert.match(css,/\.task-secondary-fields\{[^}]*display:grid/);
  assert.match(css,/\.task-submit-row\{[^}]*grid-column:1/);
- assert.match(html,/>Subtask\?<\/option>/);
+ assert.match(html,/>Subtarefa\?<\/option>/);
  assert.match(css,/\.task-form-select\{[^}]*border-radius:14px/);
 });
 

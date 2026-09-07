@@ -126,6 +126,18 @@ test('inline task editing keeps the title compact, changes priority, and exclude
   assert.match(css, /\.task-edit-input\{[^}]*width:auto/);
 });
 
+test('task edit mode becomes exactly two lines and removes completion/edit actions', () => {
+  assert.match(app, /row\.classList\.add\('task-editing'\)/);
+  assert.match(app, /topLine\.replaceChildren\(input\)/);
+  assert.match(app, /actions\.replaceChildren\(priority,parent,remove\)/);
+  assert.match(app, /remove\.classList\.add\('task-edit-delete'\)/);
+  assert.match(app, /state\.language==='en'\?'Subtask\?':'Subtarefa\?'/);
+  assert.match(html, /aria-label="Subtarefa\?"[^>]*><option value="">Subtarefa\?</);
+  assert.match(css, /\.task-editing \.task-primary-line\{/);
+  assert.match(css, /\.task-editing \.task-actions-line\{/);
+  assert.match(css, /\.task-editing \.task-edit-delete\{[^}]*#fff0ed/);
+});
+
 test('drag preview waits for a stable destination before moving the list', () => {
   assert.match(app, /PREVIEW_SETTLE_MS=180/);
   assert.match(app, /setTimeout\(commitPreview,PREVIEW_SETTLE_MS\)/);
