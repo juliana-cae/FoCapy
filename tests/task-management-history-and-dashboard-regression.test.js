@@ -27,11 +27,24 @@ test('task list offers in-place category creation, task editing and individual d
  assert.match(html,/placeholder="Add Tarefa"/);
  assert.doesNotMatch(html,/class="task-entry-field"><span>Tarefa<\/span>/);
  assert.ok(app.includes("'Add Tarefa':'Add Task'"));
- assert.ok(css.includes('.add-task-form{display:grid;grid-template-columns:minmax(0,1fr) 112px auto'));
- assert.ok(css.includes('.task-entry-field{display:grid'));
- assert.ok(css.includes('.add-task-form #new-task-tag{width:112px'));
+ assert.ok(css.includes('.add-task-form{display:grid;grid-template-columns:minmax(0,1fr) 118px'));
+ assert.ok(css.includes('.task-main-fields{display:grid'));
+ assert.ok(css.includes('.task-secondary-fields{display:grid'));
+ assert.ok(css.includes('.task-form-select{width:100%'));
  assert.match(css,/\.task-row input\[type="checkbox"\]\{[^}]*width:19px/);
  assert.match(css,/\.task-row input\.task-edit-input\{[^}]*width:100%/);
+});
+
+test('new task controls follow the compact three-zone mobile layout',()=>{
+ assert.match(html,/class="add-task-form"[\s\S]*class="task-main-fields"[\s\S]*id="new-task-tag"/);
+ assert.match(html,/class="task-secondary-fields"[\s\S]*id="new-task-priority"[\s\S]*id="new-task-parent"/);
+ assert.match(html,/class="task-submit-row"[\s\S]*Adicionar/);
+ assert.match(css,/\.add-task-form\{[^}]*grid-template-columns:minmax\(0,1fr\) 118px/);
+ assert.match(css,/\.task-main-fields\{[^}]*display:grid/);
+ assert.match(css,/\.task-secondary-fields\{[^}]*display:grid/);
+ assert.match(css,/\.task-submit-row\{[^}]*grid-column:1/);
+ assert.match(html,/>Subtask\?<\/option>/);
+ assert.match(css,/\.task-form-select\{[^}]*border-radius:14px/);
 });
 
 test('task history starts hidden and opens only through its explicit toggle',()=>{

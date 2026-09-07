@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { addTask, categoryOptions, normalizeCategoryTree, normalizeTasks, reorderCategories, reorderTasks, TASK_PRIORITIES } from '../src/core.js';
+import { addTask, categoryOptions, moveCategory, moveTask, normalizeCategoryTree, normalizeTasks, reorderCategories, reorderTasks, TASK_PRIORITIES } from '../src/core.js';
 import { readFileSync } from 'node:fs';
 
 const app = readFileSync(new URL('../src/app.js', import.meta.url), 'utf8');
@@ -13,6 +13,25 @@ test('category normalization adds stable hierarchy metadata while preserving leg
   assert.equal(categories[1].parentId, categories[0].id);
   assert.deepEqual(categories.map(category => category.order), [0, 1]);
   assert.equal(categoryOptions(categories)[1].depth, 1);
+});
+
+test('moveCategory nests the dragged category inside its target and preserves stable tree order', () => {
+  const tags = normalizeCategoryTree([{ id: 'a', name: 'A' }, { id: 'b', name: 'B' }, { id: 'c', name: 'C' }]);
+  const moved = moveCategory(tags, 'c', 'a', 'inside');
+  assert.deepEqual(moved.map(tag => [tag.id, tag.parentId, tag.order]), [['a', '', 0], ['c', 'a', 1], ['b', '', 2]]);
+});
+
+test('moveCategory rejects itself and descendant targets without changing the tree', () => {
+  const tags = normalizeCategoryTree([{ id: 'a', name: 'A' }, { id: 'b', name: 'B', parentId: 'a' }, { id: 'c', name: 'C', parentId: 'b' }]);
+  assert.deepEqual(moveCategory(tags, 'a', 'a', 'inside'), tags);
+  assert.deepEqual(moveCategory(tags, 'a', 'c', 'inside'), tags);
+});
+
+test('moveTask reorders a tree block and reparents the dropped task', () => {
+  const tasks = normalizeTasks([{ id: 'a', title: 'A' }, { id: 'b', title: 'B', parentTaskId: 'a' }, { id: 'c', title: 'C' }, { id: 'd', title: 'D' }]);
+  const moved = moveTask(tasks, 'a', 'd', 'after');
+  assert.deepEqual(moved.map(task => [task.id, task.parentTaskId, task.order]), [['c', undefined, 0], ['d', undefined, 1], ['a', undefined, 2], ['b', 'a', 3]]);
+  assert.deepEqual(moveTask(moved, 'a', 'b', 'inside'), moved);
 });
 
 test('legacy categories and invalid parents normalize safely without data loss', () => {
@@ -51,14 +70,27 @@ test('task creation and inline editor expose a parent task selector and indent c
   assert.match(app, /parentTaskId/);
 });
 
-test('task and category list rows use Pointer Event drag listeners rather than visible directional controls', () => {
+test('task and category drag listeners calculate placement, use move helpers, and protect touch interaction', () => {
+  assert.match(app, /moveCategory/);
+  assert.match(app, /moveTask/);
+  assert.match(app, /document\.elementFromPoint/);
+  assert.match(app, /\.closest\('\[data-drag-id\]'\)/);
+  assert.match(app, /getBoundingClientRect/);
+  assert.match(app, /drop-before/);
+  assert.match(app, /drop-after/);
+  assert.match(app, /drop-inside/);
+  assert.match(app, /setPointerCapture/);
+  assert.match(app, /releasePointerCapture/);
   assert.match(app, /addEventListener\('pointerdown'/);
   assert.match(app, /addEventListener\('pointermove'/);
   assert.match(app, /addEventListener\('pointerup'/);
-  assert.match(app, /reorderTasks\(state\.tasks,draggedId,direction\)/);
-  assert.match(app, /reorderCategories\(state\.tags,draggedId,direction\)/);
+  assert.match(app, /if\(event\.type==='pointerup'\)resolveDrop\(event\)/);
+  assert.match(app, /moveTask\(state\.tasks,draggedId,targetId,placement\)/);
+  assert.match(app, /moveCategory\(state\.tags,draggedId,targetId,placement\)/);
   assert.match(app, /task-drag-handle/);
   assert.match(app, /category-drag-handle/);
+  assert.match(css, /\.task-drag-handle[^}]*touch-action:none/);
+  assert.match(css, /\.category-drag-handle[^}]*touch-action:none/);
   assert.doesNotMatch(app, /task-reorder-/);
   assert.doesNotMatch(app, /category-reorder-/);
 });
