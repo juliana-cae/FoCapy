@@ -15,5 +15,5 @@ test('intention task dialog can create and immediately associate a new task',()=
  assert.match(app,/function renderIntentionTaskList\(\)/);
  assert.match(app,/renderIntentionTaskList\(\);renderTasks\(\)/);
  assert.doesNotMatch(app,/association\.disabled=state\.current\?\.status==='running'/);
- assert.match(app,/association\.onchange=\(\)=>\{[\s\S]*syncCurrentTaskAssociation\(\)/);
+ assert.match(app,/syncCurrentTaskAssociation\(\);saveState\(\);renderTimer\(\);renderIntentionTaskList\(\);renderTasks\(\)/);
 });
