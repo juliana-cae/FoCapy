@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { completionToneForMinutes } from '../src/core.js';
 import { existsSync, readFileSync } from 'node:fs';
 const app=readFileSync(new URL('../src/app.js',import.meta.url),'utf8');
+const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
 
 test('built-in gong selection follows the selected focus duration',()=>{
   assert.equal(completionToneForMinutes(25),'gongo-1');
@@ -16,7 +17,7 @@ test('the three requested gong files exist',()=>{
 });
 
 test('duration selection changes built-in gongs but preserves uploaded custom audio and manual choices',()=>{
-  assert.match(app,/function selectBuiltInCompletionTone\(minutes\)\{if\(!state\.completionToneManual&&!isCustomCompletionTone\(\)\)state\.completionTone=completionToneForMinutes\(minutes\)\}/);
+  assert.match(app,/function selectBuiltInCompletionTone\(minutes\)\{if\(!state\.completionToneManual&&!isCustomCompletionTone\(\)&&state\.completionTone!=='default'\)state\.completionTone=completionToneForMinutes\(minutes\)\}/);
   assert.match(app,/selectBuiltInCompletionTone\(state\.minutes\);saveState\(\)/);
   assert.match(app,/state\.completionToneManual=true/);
   assert.match(app,/gongo-1':'\.\.\/assets\/completion-gongo-1\.mp3/);
@@ -27,4 +28,12 @@ test('duration selection changes built-in gongs but preserves uploaded custom au
 test('completed Pomodoro and stopwatch sessions choose the gong from measured focus time',()=>{
   assert.match(app,/selectBuiltInCompletionTone\(done\.focusMinutes\)/);
   assert.match(app,/!state\.completionToneManual&&!isCustomCompletionTone\(\)/);
+});
+
+test('the supplied audio is the default completion sound and has a compact settings shortcut',()=>{
+  assert.ok(existsSync(new URL('../assets/completion-default.mp3',import.meta.url)));
+  assert.match(app,/default':'\.\.\/assets\/completion-default\.mp3/);
+  assert.match(app,/new Option\('Som padrão','default'\)/);
+  assert.match(html,/id="session-completion-sound-button"/);
+  assert.match(app,/\$\('session-completion-sound-button'\)\.onclick/);
 });

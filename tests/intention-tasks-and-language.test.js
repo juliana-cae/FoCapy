@@ -25,3 +25,8 @@ test('intention opens available task picker and first launch language choice is 
  assert.match(app,/function showIntentionTaskDialog\(/);
  assert.match(app,/languageChosen/);
 });
+
+test('every task completion flow refreshes the focus task picker',()=>{
+ assert.match(app,/state\.tasks=completeTasksForSession\(state\.tasks,done\.taskIds\);[\s\S]*renderIntentionTaskList\(\)/);
+ assert.match(app,/done:true,completedAt:new Date\(\)\.toISOString\(\)\}:item\)\);removeTaskFromActiveSession\(task\.id\);renderTimer\(\);saveState\(\);renderTasks\(\);renderIntentionTaskList\(\)/);
+});

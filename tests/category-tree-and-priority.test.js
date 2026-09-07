@@ -1,11 +1,26 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { addTask, categoryOptions, moveCategory, moveTask, normalizeCategoryTree, normalizeTasks, reorderCategories, reorderTasks, taskStatisticsForPeriod, TASK_PRIORITIES } from '../src/core.js';
+import { addTask, categoryOptions, moveCategory, moveTask, normalizeCategoryTree, normalizeTasks, reorderCategories, reorderTasks, sessionCategoryForTask, taskStatisticsForPeriod, TASK_PRIORITIES } from '../src/core.js';
 import { readFileSync } from 'node:fs';
 
 const app = readFileSync(new URL('../src/app.js', import.meta.url), 'utf8');
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 const css = readFileSync(new URL('../src/app.css', import.meta.url), 'utf8');
+
+test('task priorities use the requested Eisenhower names, colors, and selector order', () => {
+  assert.deepEqual(Object.entries(TASK_PRIORITIES).map(([value, item]) => ({ value, label: item.label, color: item.color })), [
+    { value: 'urgent', label: 'Urgente e importante', color: '#e74c3c' },
+    { value: 'high', label: 'Não urgente e importante', color: '#f39c12' },
+    { value: 'normal', label: 'Urgente e não importante', color: '#3498db' },
+    { value: 'low', label: 'Não urgente e não importante', color: '#d9f7be' },
+  ]);
+});
+
+
+test('selecting a categorized task derives the same category for the focus session', () => {
+  assert.deepEqual(sessionCategoryForTask({ tag: 'Estudo', tagColor: '#27ae60', tagFontColor: '#ffffff' }), { tag: 'Estudo', tagColor: '#27ae60', tagFontColor: '#ffffff' });
+  assert.deepEqual(sessionCategoryForTask({ title: 'Sem categoria' }), { tag: '', tagColor: '', tagFontColor: '' });
+});
 
 test('category normalization adds stable hierarchy metadata while preserving legacy names and colors', () => {
   const categories = normalizeCategoryTree([{ name: 'Work', color: '#abcdef' }, { id: 'child', name: 'Deep work', parentId: 'category-1', order: 0 }]);
@@ -61,6 +76,18 @@ test('task UI renders priority as an unlabeled solid top-left marker with a colo
   assert.doesNotMatch(app, /task-priority-badge/);
   assert.match(css, /\.task-priority-marker\{[^}]*background:var\(--task-priority-color\)/);
   assert.match(css, /\.task-row\{[^}]*border:2px solid var\(--task-priority-color\)/);
+});
+
+test('focus task composer exposes task text, priority, and category selectors', () => {
+  assert.match(html, /id="new-intention-task"/);
+  assert.match(html, /id="new-intention-task-priority"/);
+  assert.match(html, /id="new-intention-task-tag"/);
+});
+
+test('statistics totals and period labels are marked as dynamic output', () => {
+  for (const id of ['stats-total-minutes', 'stats-total-sessions', 'statistics-period-label', 'category-chart-period-label', 'category-donut-total']) {
+    assert.match(html, new RegExp(`id="${id}"[^>]*data-i18n-dynamic="true"`));
+  }
 });
 
 test('task creation and inline editor expose a parent task selector and indent children under parents', () => {
