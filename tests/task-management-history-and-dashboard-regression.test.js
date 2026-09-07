@@ -30,6 +30,8 @@ test('task list offers in-place category creation, task editing and individual d
  assert.ok(css.includes('.add-task-form{display:grid;grid-template-columns:minmax(0,1fr) 112px auto'));
  assert.ok(css.includes('.task-entry-field{display:grid'));
  assert.ok(css.includes('.add-task-form #new-task-tag{width:112px'));
+ assert.match(css,/\.task-row input\[type="checkbox"\]\{[^}]*width:19px/);
+ assert.match(css,/\.task-row input\.task-edit-input\{[^}]*width:100%/);
 });
 
 test('task history starts hidden and opens only through its explicit toggle',()=>{
