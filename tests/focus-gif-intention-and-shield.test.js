@@ -14,6 +14,8 @@ test('intention starts compact and turns editable only when its label is tapped'
   assert.match(html,/id="intention"[^>]*hidden/);
   assert.match(app,/function openIntentionEditor\(/);
   assert.match(css,/\.intention-row input\{[^}]*width:190px/);
+  assert.ok(css.includes('.intention-label{border:1px solid var(--line);border-radius:12px'));
+  assert.match(css,/\.intention-label:hover/);
 });
 test('pausing, ending, restarting or disabling Blindado immediately releases focus lock',()=>{
   assert.match(app,/const active=state\.current\?\.status==='running',locked=active&&state\.strict/);
