@@ -4,26 +4,39 @@ import { readFileSync, existsSync } from 'node:fs';
 
 const app = readFileSync(new URL('../src/app.js', import.meta.url), 'utf8');
 const manifest = readFileSync(new URL('../android/app/src/main/AndroidManifest.xml', import.meta.url), 'utf8');
+const provider = readFileSync(new URL('../android/app/src/main/java/com/focapy/app/TaskMonitorWidgetProvider.java', import.meta.url), 'utf8');
+const plugin = readFileSync(new URL('../android/app/src/main/java/com/focusgrove/plus/TaskWidgetPlugin.java', import.meta.url), 'utf8');
 const activity = readFileSync(new URL('../android/app/src/main/java/com/focapy/app/MainActivity.java', import.meta.url), 'utf8');
-const provider = readFileSync(new URL('../android/app/src/main/java/com/focapy/app/FocapyWidgetProvider.java', import.meta.url), 'utf8');
-const layout = readFileSync(new URL('../android/app/src/main/res/layout/focapy_widget.xml', import.meta.url), 'utf8');
+const layout = readFileSync(new URL('../android/app/src/main/res/layout/task_monitor_widget.xml', import.meta.url), 'utf8');
 
-test('Android home widget exposes focus, stopwatch, and task shortcuts', () => {
-  assert.match(manifest, /FocapyWidgetProvider/);
-  assert.match(manifest, /@xml\/focapy_widget_info/);
-  assert.match(provider, /ACTION_FOCUS = "focus"/);
-  assert.match(provider, /ACTION_STOPWATCH = "stopwatch"/);
-  assert.match(provider, /ACTION_TASKS = "tasks"/);
-  assert.match(layout, /id="@\+id\/widget_focus"/);
-  assert.match(layout, /id="@\+id\/widget_stopwatch"/);
-  assert.match(layout, /id="@\+id\/widget_tasks"/);
-  assert.ok(existsSync(new URL('../android/app/src/main/res/xml/focapy_widget_info.xml', import.meta.url)));
+test('native task monitor widget renders three native task slots without launching the app', () => {
+  assert.match(manifest, /TaskMonitorWidgetProvider/);
+  assert.match(manifest, /@xml\/task_monitor_widget_info/);
+  assert.doesNotMatch(manifest, /FocapyWidgetProvider/);
+  assert.match(provider, /PendingIntent\.getBroadcast/);
+  assert.doesNotMatch(provider, /PendingIntent\.getActivity/);
+  assert.match(provider, /ACTION_COMPLETE_TASK/);
+  assert.match(provider, /updateAllWidgets/);
+  assert.match(layout, /widget_task_0/);
+  assert.match(layout, /widget_task_1/);
+  assert.match(layout, /widget_task_2/);
+  assert.ok(existsSync(new URL('../android/app/src/main/res/xml/task_monitor_widget_info.xml', import.meta.url)));
 });
 
-test('widget actions open tasks or safely start the requested focus mode', () => {
-  assert.match(activity, /window\.focapyWidgetAction/);
-  assert.match(app, /function runWidgetAction\(action\)/);
-  assert.match(app, /action==='tasks'/);
-  assert.match(app, /action==='stopwatch'\?'cronometro':'foco'/);
-  assert.match(app, /window\.addEventListener\('focapy-widget-action'/);
+test('task widget plugin persists snapshots and returns widget completion IDs for JS reconciliation', () => {
+  assert.match(activity, /registerPlugin\(TaskWidgetPlugin\.class\)/);
+  assert.match(plugin, /@CapacitorPlugin\(name = "TaskWidget"\)/);
+  assert.match(plugin, /@PluginMethod/);
+  assert.match(plugin, /syncTasks/);
+  assert.match(plugin, /SharedPreferences/);
+  assert.match(plugin, /completedTaskIds/);
+  assert.match(plugin, /TaskMonitorWidgetProvider\.updateAllWidgets/);
+});
+
+test('web state syncs pending tasks and applies native completions locally', () => {
+  assert.match(app, /function syncNativeTaskWidget\(\)/);
+  assert.match(app, /window\.Capacitor\?\.Plugins\?\.TaskWidget/);
+  assert.match(app, /completedTaskIds/);
+  assert.match(app, /completeTasksForSession\(state\.tasks,completedTaskIds\)/);
+  assert.match(app, /syncNativeTaskWidget\(\)/);
 });
