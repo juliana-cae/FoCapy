@@ -24,13 +24,10 @@ test('task list offers in-place category creation, task editing and individual d
  assert.match(app,/className='text-button task-delete'/);
  assert.match(app,/className='text-button task-history-delete'/);
  assert.match(html,/Crie tarefas que podem ser associadas à sua próxima sessão de foco/);
- assert.match(html,/placeholder="Add Tarefa"/);
- assert.doesNotMatch(html,/class="task-entry-field"><span>Tarefa<\/span>/);
- assert.ok(app.includes("'Add Tarefa':'Add Task'"));
- assert.ok(css.includes('.add-task-form{display:grid;grid-template-columns:minmax(0,1fr) 118px'));
- assert.ok(css.includes('.task-main-fields{display:grid'));
- assert.ok(css.includes('.task-secondary-fields{display:grid'));
- assert.ok(css.includes('.task-form-select{width:100%'));
+ assert.match(html,/placeholder="Tarefa"/);
+ assert.doesNotMatch(html,/placeholder="Add Tarefa"/);
+ assert.match(app,/function syncTaskComposerAccents\(\)/);
+ assert.match(css,/\.task-add-card #add-task-form #new-task-tag,[\s\S]*background:#e7e3d8/);
  assert.match(css,/\.task-row input\[type="checkbox"\]\{[^}]*width:19px/);
  assert.match(css,/\.task-row input\.task-edit-input\{[^}]*width:100%/);
 });
