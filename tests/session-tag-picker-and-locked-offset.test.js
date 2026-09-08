@@ -17,7 +17,7 @@ test('the focus session tag is an interactive control for changing the current s
   assert.match(app, /button\.replaceWith\(select\)/);
   assert.match(app, /select\.focus\(\);select\.showPicker\?\.\(\)/);
   assert.match(app, /select\.onblur=restore/);
-  assert.match(app, /new Option\(state\.language==='en'\?'No category':'Sem categoria',''\)/);
+  assert.match(app, /new Option\(state\.language==='en'\?'Category':'Categoria',''\)/);
 });
 
 test('deleting a category clears the active dashboard category and re-renders immediately', () => {
