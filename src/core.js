@@ -38,6 +38,7 @@ export function dailyProgress(sessions, day, goal) {
 }
 export function formatSeconds(seconds) { const safe = Math.max(0, Math.floor(Number(seconds) || 0)); return `${String(Math.floor(safe / 60)).padStart(2, '0')}:${String(safe % 60).padStart(2, '0')}`; }
 export function phraseForElapsed(phrases, elapsedSeconds, intervalSeconds = 35) { const valid = Array.isArray(phrases) ? phrases.filter(Boolean) : []; return valid.length ? valid[Math.floor(Math.max(0, elapsedSeconds) / intervalSeconds) % valid.length] : 'Um passo de cada vez.'; }
+export function randomPhraseFor(phrases, random = Math.random, previous = '') { const valid = Array.isArray(phrases) ? phrases.filter(Boolean) : []; if (!valid.length) return 'Um passo de cada vez.'; if (valid.length === 1) return valid[0]; const candidates = valid.filter(phrase => phrase !== previous); const value = Number(random()); const index = Math.min(candidates.length - 1, Math.max(0, Math.floor((Number.isFinite(value) ? value : 0) * candidates.length))); return candidates[index]; }
 export function addPhrase(phrases, phrase) { const value = String(phrase || '').trim(); return value ? [...phrases, value] : [...phrases]; }
 export function updatePhrase(phrases, index, phrase) { const value = String(phrase || '').trim(); return !value || index < 0 || index >= phrases.length ? [...phrases] : phrases.map((item, i) => i === index ? value : item); }
 export function nextSeasonCountdown(now = new Date()) {

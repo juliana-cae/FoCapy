@@ -90,6 +90,11 @@ test('statistics totals and period labels are marked as dynamic output', () => {
   }
 });
 
+test('selecting a task for the focus session strikes its title visually', () => {
+  assert.match(app, /row\.classList\.toggle\('selected-for-session',association\.checked\)/);
+  assert.match(css, /\.task-row\.selected-for-session \.task-title\{[^}]*text-decoration:line-through/);
+});
+
 test('task creation and inline editor expose a parent task selector and indent children under parents', () => {
   assert.match(html, /id="new-task-parent"/);
   assert.match(app, /task-parent-picker/);
