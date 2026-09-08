@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { advancePomoSession } from '../src/core.js';
+import { readFileSync } from 'node:fs';
 
 const focusSession=(overrides={})=>({
   pomoPhase:'focus', pomoCycle:1, pomoCycles:2,
@@ -38,4 +39,13 @@ test('manual pausing has no transition because it does not advance a Pomodoro ph
   const paused=focusSession({status:'paused'});
   assert.equal(paused.pomoPhase,'focus');
   assert.equal(paused.phaseElapsedSeconds,0);
+});
+
+test('Pomodoro exposes a skip-rest action and preserves cycle state while pausing',()=>{
+  const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+  const app=readFileSync(new URL('../src/app.js',import.meta.url),'utf8');
+  assert.match(html,/id="pomo-skip-break"/);
+  assert.match(app,/function skipPomoBreak\(\)/);
+  assert.match(app,/function syncSessionViewport\(\).*paused.*pomoPhase/);
+  assert.match(app,/c\.pomoPhase==='break'\?Math\.max\(0,c\.pomoCycles-c\.pomoCycle\):Math\.max\(0,c\.pomoCycles-c\.pomoCycle\+1\)/);
 });

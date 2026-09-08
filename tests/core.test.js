@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   createSession, progressFor, finishSession, dailyProgress, formatSeconds,
-  phraseForElapsed, addPhrase, updatePhrase, VEGETATION, createInventory, awardVegetation,
+  phraseForElapsed, randomPhraseFor, addPhrase, updatePhrase, VEGETATION, createInventory, awardVegetation,
   monthKey, rolloverMonthlyState, migrateLegacyInventory, advancePomoSession,
   COMPLETION_IMAGE_FILES, pickCompletionImage, mergeDefaultPhrases, nextSeasonCountdown,
   GOOD_MORNING_PHRASES, greetingForDay,
@@ -25,7 +25,7 @@ test('morning greetings are developer-owned and stay separate from editable moti
   assert.equal(greetingForDay(new Date(2026,8,7)),'Quanto tempo existe em cinco minutos de silêncio?');
 });
 
-test('phrases rotate every 35 seconds', () => { const phrases=['Comece pequeno.','Respire e continue.','Uma coisa por vez.']; assert.equal(phraseForElapsed(phrases,0),'Comece pequeno.'); assert.equal(phraseForElapsed(phrases,35),'Respire e continue.'); assert.equal(phraseForElapsed(phrases,105),'Comece pequeno.'); });
+test('phrases are randomized at each focus interval without immediate repetition', () => { const phrases=['A','B','C']; assert.equal(randomPhraseFor(phrases,()=>0,''),'A'); assert.equal(randomPhraseFor(phrases,()=>0,'A'),'B'); assert.equal(randomPhraseFor(phrases,()=>.99,'B'),'C'); });
 test('phrases can be added and edited immutably', () => { const initial=['Foque no próximo passo.']; const withNew=addPhrase(initial,'Você consegue.'); assert.deepEqual(withNew,['Foque no próximo passo.','Você consegue.']); assert.deepEqual(updatePhrase(withNew,1,'Siga com calma.'),['Foque no próximo passo.','Siga com calma.']); assert.deepEqual(initial,['Foque no próximo passo.']); });
 test('the Focapy catalog contains twenty-eight distinct capybara-universe items', () => { const byName=new Map(VEGETATION.map(item=>[item.name,item])); assert.equal(VEGETATION.length,28); assert.equal(new Set(VEGETATION.map(item=>item.id)).size,28); assert.deepEqual([...byName.keys()].filter(name=>['Tangerina','Água termal','Meleca de nariz','Passarinho na testa'].includes(name)).length,4); assert.equal(byName.get('Tangerina').icon,'🍊'); assert.equal(byName.get('Água termal').icon,'♨️'); assert.equal(byName.get('Meleca de nariz').icon,'🤧'); assert.equal(byName.get('Passarinho na testa').icon,'🐦'); });
 test('longer sessions award rarer vegetation and inventory has no cap', () => { let inventory=createInventory(); const short=awardVegetation(inventory,10,7); assert.equal(short.item.rarity,'comum'); const long=awardVegetation(short.inventory,120,7); assert.ok(['raro','lendário'].includes(long.item.rarity)); inventory=long.inventory; for(let index=0;index<100;index+=1) inventory=awardVegetation(inventory,25,index).inventory; assert.ok(Object.values(inventory).reduce((sum,count)=>sum+count,0)>=102); });
