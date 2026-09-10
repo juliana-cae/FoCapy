@@ -1,16 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/focapy_widget_background" android:orientation="vertical" android:padding="16dp">
- <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="FoCapy" android:textColor="#15382E" android:textSize="19sp" android:textStyle="bold" />
- <TextView android:id="@+id/focus_widget_status" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Escolha um modo para começar" android:textColor="#647067" android:textSize="12sp" />
- <LinearLayout android:id="@+id/focus_widget_picker" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="13dp" android:orientation="vertical">
-  <TextView android:id="@+id/focus_widget_start" android:layout_width="match_parent" android:layout_height="50dp" android:background="@drawable/focapy_widget_primary_button" android:gravity="center" android:text="▶  Iniciar foco · 25 min" android:textColor="#FFFDF8" android:textSize="14sp" android:textStyle="bold"/>
-  <TextView android:id="@+id/focus_widget_stopwatch" android:layout_width="match_parent" android:layout_height="46dp" android:layout_marginTop="8dp" android:background="@drawable/focapy_widget_secondary_button" android:gravity="center" android:text="◷  Iniciar cronômetro" android:textColor="#15382E" android:textSize="14sp" android:textStyle="bold"/>
- </LinearLayout>
- <LinearLayout android:id="@+id/focus_widget_session" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-  <Chronometer android:id="@+id/focus_widget_timer" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:gravity="center" android:textColor="#15382E" android:textSize="36sp" android:textStyle="bold"/>
-  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="9dp" android:gravity="center" android:orientation="horizontal">
-   <TextView android:id="@+id/focus_widget_pause" android:layout_width="0dp" android:layout_height="44dp" android:layout_weight="1" android:background="@drawable/focapy_widget_secondary_button" android:gravity="center" android:text="Pausar" android:textColor="#15382E" android:textSize="13sp" android:textStyle="bold"/>
-   <TextView android:id="@+id/focus_widget_end" android:layout_width="0dp" android:layout_height="44dp" android:layout_marginStart="8dp" android:layout_weight="1" android:background="@drawable/focapy_widget_primary_button" android:gravity="center" android:text="Encerrar" android:textColor="#FFFDF8" android:textSize="13sp" android:textStyle="bold"/>
-  </LinearLayout>
- </LinearLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/focapy_widget_background" android:orientation="vertical" android:padding="16dp">
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="FoCapy"
+        android:textColor="#15382E" android:textSize="19sp" android:textStyle="bold" />
+    <TextView android:id="@+id/focus_widget_status" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="3dp" android:text="Pronto para cultivar" android:textColor="#647067" android:textSize="12sp" />
+    <LinearLayout android:id="@+id/focus_widget_picker" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" android:orientation="vertical">
+        <TextView android:id="@+id/focus_widget_duration" android:layout_width="match_parent" android:layout_height="48dp"
+            android:background="@drawable/focapy_widget_secondary_button" android:contentDescription="Editar duração do foco"
+            android:gravity="center" android:text="25 min" android:textColor="#15382E" android:textSize="26sp" android:textStyle="bold" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
+            <TextView android:id="@+id/focus_widget_start" android:layout_width="0dp" android:layout_height="46dp" android:layout_weight="1"
+                android:background="@drawable/focapy_widget_primary_button" android:gravity="center" android:text="▶  Foco"
+                android:textColor="#FFFDF8" android:textSize="14sp" android:textStyle="bold" />
+            <TextView android:id="@+id/focus_widget_stopwatch" android:layout_width="0dp" android:layout_height="46dp"
+                android:layout_marginStart="8dp" android:layout_weight="1" android:background="@drawable/focapy_widget_secondary_button"
+                android:gravity="center" android:text="◷  Cronômetro" android:textColor="#15382E" android:textSize="13sp" android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/focus_widget_session" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+        <Chronometer android:id="@+id/focus_widget_timer" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="6dp" android:gravity="center" android:textColor="#15382E" android:textSize="36sp" android:textStyle="bold" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="9dp" android:gravity="center" android:orientation="horizontal">
+            <TextView android:id="@+id/focus_widget_pause" android:layout_width="0dp" android:layout_height="44dp" android:layout_weight="1"
+                android:background="@drawable/focapy_widget_secondary_button" android:gravity="center" android:text="Pausar"
+                android:textColor="#15382E" android:textSize="13sp" android:textStyle="bold" />
+            <TextView android:id="@+id/focus_widget_resume" android:layout_width="0dp" android:layout_height="44dp" android:layout_weight="1"
+                android:background="@drawable/focapy_widget_secondary_button" android:gravity="center" android:text="Retomar"
+                android:textColor="#15382E" android:textSize="13sp" android:textStyle="bold" />
+            <TextView android:id="@+id/focus_widget_end" android:layout_width="0dp" android:layout_height="44dp"
+                android:layout_marginStart="8dp" android:layout_weight="1" android:background="@drawable/focapy_widget_primary_button"
+                android:gravity="center" android:text="Encerrar" android:textColor="#FFFDF8" android:textSize="13sp" android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

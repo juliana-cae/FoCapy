@@ -14,7 +14,8 @@ test('native task monitor widget renders three native task slots without launchi
   assert.match(manifest, /@xml\/task_monitor_widget_info/);
   assert.doesNotMatch(manifest, /FocapyWidgetProvider/);
   assert.match(provider, /PendingIntent\.getBroadcast/);
-  assert.doesNotMatch(provider, /PendingIntent\.getActivity/);
+  assert.match(provider, /PendingIntent\.getActivity/);
+  assert.doesNotMatch(provider, /MainActivity\.class/);
   assert.match(provider, /ACTION_COMPLETE_TASK/);
   assert.match(provider, /updateAllWidgets/);
   assert.match(layout, /widget_task_0/);
@@ -36,7 +37,7 @@ test('task widget plugin persists snapshots and returns widget completion IDs fo
 test('web state syncs pending tasks and applies native completions locally', () => {
   assert.match(app, /function syncNativeTaskWidget\(\)/);
   assert.match(app, /window\.Capacitor\?\.Plugins\?\.TaskWidget/);
-  assert.match(app, /completedTaskIds/);
-  assert.match(app, /completeTasksForSession\(state\.tasks,completedTaskIds\)/);
+  assert.match(app, /mergeNativeTaskChanges\(state\.tasks,result\)/);
+  assert.match(app, /acknowledgedCreatedTaskIds/);
   assert.match(app, /syncNativeTaskWidget\(\)/);
 });
