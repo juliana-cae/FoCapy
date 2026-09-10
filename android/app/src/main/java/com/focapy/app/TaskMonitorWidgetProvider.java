@@ -22,6 +22,7 @@ import java.util.UUID;
 public class TaskMonitorWidgetProvider extends AppWidgetProvider {
     public static final String ACTION_COMPLETE_TASK = "com.focapy.app.COMPLETE_WIDGET_TASK";
     public static final String EXTRA_TASK_ID = "task_id";
+    public static final String EXTRA_TASK_TITLE = "task_title";
     static final String PREFS_NAME = "focapy_task_widget";
     static final String PREFS_PENDING_TASKS = "pending_tasks";
     static final String PREFS_COMPLETED_TASK_IDS = "completed_task_ids";
@@ -65,13 +66,18 @@ public class TaskMonitorWidgetProvider extends AppWidgetProvider {
             views.setViewVisibility(rowId, View.VISIBLE);
             views.setTextViewText(rowId, "✓  " + title);
             views.setContentDescription(rowId, "Concluir " + title);
-            views.setOnClickPendingIntent(rowId, completionIntent(context, taskId, widgetId, index));
+            views.setOnClickPendingIntent(rowId, editIntent(context, taskId, title, widgetId, index));
         }
         views.setViewVisibility(R.id.widget_empty, tasks.length() == 0 ? View.VISIBLE : View.GONE);
         Intent addIntent = new Intent(context, WidgetTaskInputActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         views.setOnClickPendingIntent(R.id.widget_add_task, PendingIntent.getActivity(
             context, 700000 + widgetId, addIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
         return views;
+    }
+
+    private PendingIntent editIntent(Context context, String taskId, String title, int widgetId, int index) {
+        Intent intent = new Intent(context, WidgetTaskInputActivity.class).putExtra(EXTRA_TASK_ID, taskId).putExtra(EXTRA_TASK_TITLE, title);
+        return PendingIntent.getActivity(context, widgetId * 100 + index, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
     private PendingIntent completionIntent(Context context, String taskId, int widgetId, int index) {
@@ -97,6 +103,17 @@ public class TaskMonitorWidgetProvider extends AppWidgetProvider {
         prefs.edit().putString(PREFS_PENDING_TASKS, remaining.toString())
             .putStringSet(PREFS_COMPLETED_TASK_IDS, completed).apply();
     }
+
+    static void updateTaskTitle(Context context, String taskId, String newTitle) {
+        if (taskId == null || taskId.trim().isEmpty()) return;
+        String title = newTitle == null ? "" : newTitle.trim().replaceAll("\\s+", " ");
+        if (title.isEmpty()) return;
+        SharedPreferences prefs = prefs(context); JSONArray pending = readPendingTasks(context); JSONArray next = new JSONArray();
+        for (int i=0;i<pending.length();i++){JSONObject t=pending.optJSONObject(i);if(t!=null&&taskId.equals(t.optString("id")))try{t.put("title",title);}catch(Exception ignored){}if(t!=null)next.put(t);}
+        prefs.edit().putString(PREFS_PENDING_TASKS,next.toString()).apply(); updateAllWidgets(context);
+    }
+
+    static void completeTaskFromDialog(Context context, String taskId) { markTaskComplete(context, taskId); updateAllWidgets(context); }
 
     static String enqueueCreatedTask(Context context, String rawTitle) {
         String title = rawTitle == null ? "" : rawTitle.trim().replaceAll("\\s+", " ");

@@ -7,6 +7,7 @@
         android:layout_marginTop="12dp" android:hint="O que precisa ser feito?" android:imeOptions="actionDone"
         android:inputType="textCapSentences" android:maxLength="100" android:maxLines="2" />
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:gravity="end" android:orientation="horizontal">
+        <Button android:id="@+id/widget_task_complete" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Concluir" />
         <Button android:id="@+id/widget_task_cancel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Cancelar" />
         <Button android:id="@+id/widget_task_save" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="Criar" />
     </LinearLayout>
